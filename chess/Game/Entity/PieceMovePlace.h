@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "MyNovice.h"
 #include "BaseEntity.h"
 #include "LoadFile.h"
@@ -22,6 +22,12 @@ public:
 	bool GetIsCursorOn() const { return isCursorOn_; }
 
 	void IsClick();
+
+	/// <summary>
+	/// 移動できる方向を配列に代入して返す
+	/// </summary>
+	/// <returns></returns>
+	std::vector<Moved> GetCanMove() override;
 
 private:
 

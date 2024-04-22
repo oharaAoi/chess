@@ -1,5 +1,8 @@
 ﻿#include "Board.h"
 
+#include "Enemy.h"
+#include "BaseEntity.h"
+
 std::vector<std::vector<int>> Board::currentArray_{};
 
 Board::Board() {
@@ -109,4 +112,20 @@ void Board::SetCurrentArray(const Vec2& address, const PlayerType& playerType, c
 	currentAddress += (int)pieceType;
 
 	currentArray_[address.y][address.x] = currentAddress;
+}
+
+std::vector<Moved> Board::CreateCanMove() {
+	std::vector<Moved> result{};
+	const auto& pices = enemy_->GetPices();
+
+	for (const auto& entity : pices) {
+		// 移動できる方向を駒ごとに取得
+		std::vector<Moved> piceMove = entity->GetCanMove();
+		// 取得した値を結果に格納
+		for (int oi = 0; oi < piceMove.size(); oi++) {
+			result.push_back(piceMove[oi]);
+		}
+	}
+
+	return result;
 }

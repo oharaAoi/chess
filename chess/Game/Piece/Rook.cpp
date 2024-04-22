@@ -157,3 +157,7 @@ void Rook::MovePlaceDraw() {
 		}
 	}
 }
+
+std::vector<Moved> Rook::GetCanMove() {
+	return std::vector<Moved>();
+}

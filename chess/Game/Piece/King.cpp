@@ -135,3 +135,7 @@ void King::MovePlaceDraw() {
 		}
 	}
 }
+
+std::vector<Moved> King::GetCanMove() {
+	return std::vector<Moved>();
+}

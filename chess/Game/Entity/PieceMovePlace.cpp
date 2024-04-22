@@ -48,3 +48,7 @@ void PieceMovePlace::IsClick() {
 	}
 }
 
+std::vector<Moved> PieceMovePlace::GetCanMove() {
+	return std::vector<Moved>();
+}
+

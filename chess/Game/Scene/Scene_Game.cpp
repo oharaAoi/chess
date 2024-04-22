@@ -18,6 +18,9 @@ void Scene_Game::Init(){
 	board_ = std::make_unique<Board>();
 
 	drawUtils_ = std::make_unique<DrawUtils>();
+
+	// 
+	board_->SetEnemy(enemy_.get());
 }
 
 //=================================================================================================================
@@ -32,6 +35,9 @@ void Scene_Game::Update(){
 
 	player_->Update();
 	enemy_->Update();
+
+	std::vector<Moved> a = board_->CreateCanMove();
+	a.clear();
 
 	drawUtils_->Update(MyNovice::GetCamera()->GetVpMatrix());
 }

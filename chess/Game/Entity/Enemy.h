@@ -24,6 +24,10 @@ public:
 	void Update();
 	void Draw();
 
+public: // accsesser
+
+	const std::vector<std::unique_ptr<BaseEntity>>& GetPices() const { return pices_; }
+
 public:
 
 	/// <summary>

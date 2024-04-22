@@ -126,3 +126,15 @@ void Pawn::MovePlaceDraw() {
 		}
 	}
 }
+
+std::vector<Moved> Pawn::GetCanMove() {
+	std::vector<Moved> result{};
+	std::vector<std::vector<int>> nowArray = Board::GetCurrentArray();
+	// 上を確認
+	// 0(何もなかったら生成)
+	if (nowArray[address_.y - 1][address_.x] == 0) {
+		Vec2 address = { address_.x , address_.y + 1 };
+		result.push_back({ address , address_ });
+	}
+	return result;
+}

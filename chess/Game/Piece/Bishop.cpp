@@ -164,3 +164,68 @@ void Bishop::MovePlaceDraw() {
 		}
 	}
 }
+
+std::vector<Moved> Bishop::GetCanMove() {
+	std::vector<Moved> result{};
+	std::vector<std::vector<int>> nowArray = Board::GetCurrentArray();
+	// 入れつからアドレスを計算する最大値を計算する
+	int maxLine = static_cast<int>(nowArray.size()) - 1;
+
+	Vec2 checkAddress = { address_.x + 1, address_.y + 1 };
+	// 右上方向を確認する
+	while (checkAddress.x != maxLine && checkAddress.y != maxLine) {
+		// 0だったら生成
+		if (nowArray[checkAddress.y][checkAddress.x] == 0) {
+			result.push_back({ checkAddress , address_});
+		} else {
+			// 0以外があったらループを出る
+			break;
+		}
+
+		checkAddress = { checkAddress.x + 1, checkAddress.y + 1 };
+	}
+
+	// 左上を確認
+	checkAddress = { address_.x - 1, address_.y + 1 };
+	while (checkAddress.x != 0 && checkAddress.y != maxLine) {
+		// 0だったら生成
+		if (nowArray[checkAddress.y][checkAddress.x] == 0) {
+			result.push_back({ checkAddress , address_ });
+		} else {
+			// 0以外があったらループを出る
+			break;
+		}
+
+		checkAddress = { checkAddress.x - 1, checkAddress.y + 1 };
+	}
+
+	// 右下を確認
+	checkAddress = { address_.x + 1, address_.y - 1 };
+	while (checkAddress.x != maxLine && checkAddress.y != 0) {
+		// 0だったら生成
+		if (nowArray[checkAddress.y][checkAddress.x] == 0) {
+			result.push_back({ checkAddress , address_ });
+		} else {
+			// 0以外があったらループを出る
+			break;
+		}
+
+		checkAddress = { checkAddress.x + 1, checkAddress.y - 1 };
+	}
+
+	// 左下を確認
+	checkAddress = { address_.x - 1, address_.y - 1 };
+	while (checkAddress.x != 0 && checkAddress.y != 0) {
+		// 0だったら生成
+		if (nowArray[checkAddress.y][checkAddress.x] == 0) {
+			result.push_back({ checkAddress , address_ });
+		} else {
+			// 0以外があったらループを出る
+			break;
+		}
+
+		checkAddress = { checkAddress.x - 1, checkAddress.y - 1 };
+	}
+
+	return result;
+}

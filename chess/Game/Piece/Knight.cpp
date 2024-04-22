@@ -135,3 +135,7 @@ void Knight::MovePlaceDraw() {
 		}
 	}
 }
+
+std::vector<Moved> Knight::GetCanMove() {
+	return std::vector<Moved>();
+}

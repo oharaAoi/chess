@@ -12,6 +12,12 @@ enum PieceType {
 	KingType
 };
 
+struct Moved {
+	Vec2 toMove;
+	Vec2 formMove;
+};
+
+
 class BaseEntity{
 public:
 
@@ -31,6 +37,8 @@ public:
 	virtual Vec2 GetAddress() const { return address_; }
 
 	virtual PieceType GetPieceType() const { return pieceType_; }
+
+	virtual std::vector<Moved> GetCanMove() = 0;
 
 protected:
 

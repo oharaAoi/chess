@@ -1,4 +1,4 @@
-#include "MinMaxAlgorithm.h"
+ï»¿#include "MinMaxAlgorithm.h"
 
 MinMaxAlgorithm::MinMaxAlgorithm() {
 }
@@ -7,26 +7,26 @@ MinMaxAlgorithm::~MinMaxAlgorithm() {
 }
 
 /// <summary>
-/// ©•ª‚É‚Æ‚Á‚Äˆê”Ô—Ç‚¢è‚ğ“G‚Íˆê”Ô’á‚¢è(©•ª‚É‚Æ‚Á‚Äˆê”Ô‚¢‚â‚Èè‚ğ‘I‚Ô)
+/// è‡ªåˆ†ã«ã¨ã£ã¦ä¸€ç•ªè‰¯ã„æ‰‹ã‚’æ•µã¯ä¸€ç•ªä½ã„æ‰‹(è‡ªåˆ†ã«ã¨ã£ã¦ä¸€ç•ªã„ã‚„ãªæ‰‹ã‚’é¸ã¶)
 /// </summary>
 /// <param name="depth"></param>
 /// <param name="alpha"></param>
 /// <param name="beta"></param>
 /// <param name="maximizingPlayer"></param>
 /// <returns></returns>
-int MinMaxAlgorithm::minmax(int depth, int alpha, int beta, bool maximizingPlayer) {
-	// [‚³‚ª0‚É’B‚µ‚½‚çŠÖ”‚ğI—¹‚·‚é
-	if (depth == 0) {
-		return 0;
-	}
-
-	// Å‘å’l‚ğ’Tõ‚·‚é‚©Å¬’l‚ğ’Tõ‚·‚é‚©
-	// Å‘å’l‚Ìê‡‚Íq‚Ìƒm[ƒh‚É‘Î‚µ‚Ä”äŠr‚ğs‚¢”’l‚ª‘å‚«‚¢‚à‚Ì‚ğ•Ô‚·
-	if (maximizingPlayer) {
-		// Å‘å‚Ì•]‰¿’l
-		int maxEval = -999999;
-	} else {
-		// Å¬‚Ì•]‰¿— 
-		int minEval = 10000000;
-	}
-}
+//int MinMaxAlgorithm::minmax(int depth, int alpha, int beta, bool maximizingPlayer) {
+//	// æ·±ã•ãŒ0ã«é”ã—ãŸã‚‰é–¢æ•°ã‚’çµ‚äº†ã™ã‚‹
+//	if (depth == 0) {
+//		return 0;
+//	}
+//
+//	// æœ€å¤§å€¤ã‚’æ¢ç´¢ã™ã‚‹ã‹æœ€å°å€¤ã‚’æ¢ç´¢ã™ã‚‹ã‹
+//	// æœ€å¤§å€¤ã®å ´åˆã¯å­ã®ãƒãƒ¼ãƒ‰ã«å¯¾ã—ã¦æ¯”è¼ƒã‚’è¡Œã„æ•°å€¤ãŒå¤§ãã„ã‚‚ã®ã‚’è¿”ã™
+//	if (maximizingPlayer) {
+//		// æœ€å¤§ã®è©•ä¾¡å€¤
+//		int maxEval = -999999;
+//	} else {
+//		// æœ€å°ã®è©•ä¾¡ç† 
+//		int minEval = 10000000;
+//	}
+//}

@@ -140,3 +140,7 @@ void Queen::MovePlaceDraw() {
 		}
 	}
 }
+
+std::vector<Moved> Queen::GetCanMove() {
+	return std::vector<Moved>();
+}

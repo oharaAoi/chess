@@ -26,6 +26,12 @@ public:
 
 	void MovePlaceDraw();
 
+	/// <summary>
+	/// 移動できる方向を配列に代入して返す
+	/// </summary>
+	/// <returns></returns>
+	std::vector<Moved> GetCanMove() override;
+
 private:
 
 	int GH_;

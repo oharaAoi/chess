@@ -1,17 +1,17 @@
-#pragma once
+ï»¿#pragma once
 #include "MyVector2.h"
 #include "BaseEntity.h"
 #include "MyMath.h"
 #include "Board.h"
 
-struct Moved {
-	Vec2 moveToIndex;// ‚Ç‚±‚ÌƒAƒhƒŒƒX‚ÉˆÚ“®‚·‚é‚©
-	int evaluation; // •]‰¿’l
-	PieceType type;	// ‚Ç‚Ìí—Ş‚Ì‹î‚ğˆÚ“®‚³‚é‚©
+struct EvalDate {
+	Vec2 moveToIndex;// ã©ã“ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ã«ç§»å‹•ã™ã‚‹ã‹
+	int evaluation; // è©•ä¾¡å€¤
+	PieceType type;	// ã©ã®ç¨®é¡ã®é§’ã‚’ç§»å‹•ã•ã‚‹ã‹
 };
 
 /// <summary>
-/// minmaxƒAƒ‹ƒSƒŠƒYƒ€‚ğs‚¤ƒNƒ‰ƒX
+/// minmaxã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ ã‚’è¡Œã†ã‚¯ãƒ©ã‚¹
 /// </summary>
 class MinMaxAlgorithm {
 
@@ -21,11 +21,11 @@ public:
 	~MinMaxAlgorithm();
 
 	/// <summary>
-	/// •]‰¿ŠÖ”
+	/// è©•ä¾¡é–¢æ•°
 	/// </summary>
 	/// <param name="depth"></param>
 	/// <param name="maximizingPlayer"></param>
-	int minmax(int depth, int alpha, int beta, bool maximizingPlayer);
+	//int minmax(int depth, int alpha, int beta, bool maximizingPlayer);
 
 private:
 
