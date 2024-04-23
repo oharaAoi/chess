@@ -136,6 +136,38 @@ void Knight::MovePlaceDraw() {
 	}
 }
 
-std::vector<Moved> Knight::GetCanMove() {
-	return std::vector<Moved>();
+std::vector<Moved> Knight::GetCanMove(const std::vector<std::vector<int>>& board) {
+	std::vector<Moved> result{};
+	std::vector<std::vector<int>> nowArray = board;
+	// 入れつからアドレスを計算する最大値を計算する
+	int maxLine = static_cast<int>(nowArray.size()) - 1;
+
+	int movedX[] = { -2, -1, 1, 2, 2, 1, -1, -2 };
+	int movedY[] = { 1, 2, 2, 1, -1, -2, -2, -1 };
+
+	for (int oi = 0; oi < 8; oi++) {
+		Vec2 checkAddress = address_;
+		checkAddress.x += movedX[oi];
+		checkAddress.y += movedY[oi];
+
+		bool isOver = false;
+
+		// 値が範囲を超えているかをまず調べる
+		if (checkAddress.x <= 0 || checkAddress.x >= maxLine) {
+			isOver = true;
+		}
+
+		if (checkAddress.y <= 0 || checkAddress.y >= maxLine) {
+			isOver = true;
+		}
+
+		if (!isOver) {
+			if (nowArray[checkAddress.y][checkAddress.x] == 0) {
+				result.push_back({ checkAddress , address_ });
+			} else if (nowArray[checkAddress.y][checkAddress.x] / 10 == 1) {
+				result.push_back({ checkAddress , address_ });
+			}
+		}
+	}
+	return result;
 }

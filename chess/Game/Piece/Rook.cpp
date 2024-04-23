@@ -76,6 +76,12 @@ void Rook::MovePlaceInit() {
 		if (nowArray[row][address_.x] == 0) {
 			Vec2 address = { address_.x , row };
 			movePlaces_.push_back(std::make_unique<PieceMovePlace>(address));
+		} else if (nowArray[row][address_.x] / 10 == 1) {
+			// 敵がいた場合
+			Vec2 address = { address_.x , row };
+			movePlaces_.push_back(std::make_unique<PieceMovePlace>(address));
+			break;
+
 		} else {
 			// 0以外があったらループを出る
 			break;
@@ -88,6 +94,12 @@ void Rook::MovePlaceInit() {
 		if (nowArray[row][address_.x] == 0) {
 			Vec2 address = { address_.x , row };
 			movePlaces_.push_back(std::make_unique<PieceMovePlace>(address));
+		} else if (nowArray[row][address_.x] / 10 == 1) {
+			// 敵がいた場合
+			Vec2 address = { address_.x , row };
+			movePlaces_.push_back(std::make_unique<PieceMovePlace>(address));
+			break;
+
 		} else {
 			// 0以外があったらループを出る
 			break;
@@ -100,6 +112,12 @@ void Rook::MovePlaceInit() {
 		if (nowArray[address_.y][col] == 0) {
 			Vec2 address = { col, address_.y };
 			movePlaces_.push_back(std::make_unique<PieceMovePlace>(address));
+		} else if (nowArray[address_.y][col] / 10 == 1) {
+			// 敵がいた場合
+			Vec2 address = { col, address_.y };
+			movePlaces_.push_back(std::make_unique<PieceMovePlace>(address));
+			break;
+
 		} else {
 			// 0以外があったらループを出る
 			break;
@@ -112,6 +130,12 @@ void Rook::MovePlaceInit() {
 		if (nowArray[address_.y][col] == 0) {
 			Vec2 address = { col, address_.y };
 			movePlaces_.push_back(std::make_unique<PieceMovePlace>(address));
+		} else if (nowArray[address_.y][col] / 10 == 1) {
+			// 敵がいた場合
+			Vec2 address = { col, address_.y };
+			movePlaces_.push_back(std::make_unique<PieceMovePlace>(address));
+			break;
+
 		} else {
 			// 0以外があったらループを出る
 			break;
@@ -158,6 +182,75 @@ void Rook::MovePlaceDraw() {
 	}
 }
 
-std::vector<Moved> Rook::GetCanMove() {
-	return std::vector<Moved>();
+std::vector<Moved> Rook::GetCanMove(const std::vector<std::vector<int>>& board) {
+	std::vector<Moved> result{};
+	std::vector<std::vector<int>> nowArray = board;
+	// 入れつからアドレスを計算する最大値を計算する
+	int maxLine = static_cast<int>(nowArray.size()) - 1;
+
+	// 上方向を確認(味方か敵がいるアドレスまでの数を計算する)
+	for (int row = address_.y + 1; row < maxLine; row++) {
+		// 0だったら生成
+		if (nowArray[row][address_.x] == 0) {
+			Vec2 address = { address_.x , row };
+			result.push_back({ address, address_ });
+		} else if (nowArray[row][address_.x] / 10 == 1) {
+			Vec2 address = { address_.x , row };
+			result.push_back({ address, address_ });
+			break;
+		} else {
+			// 0以外があったらループを出る
+			break;
+		}
+	}
+
+	// 下方向を確認
+	for (int row = address_.y - 1; row >= 1; row--) {
+		// 0だったら生成
+		if (nowArray[row][address_.x] == 0) {
+			Vec2 address = { address_.x , row };
+			result.push_back({ address, address_ });
+		} else if (nowArray[row][address_.x] / 10 == 1) {
+			Vec2 address = { address_.x , row };
+			result.push_back({ address, address_ });
+			break;
+		} else {
+			// 0以外があったらループを出る
+			break;
+		}
+	}
+
+	// 右方向を確認
+	for (int col = address_.x + 1; col < maxLine; col++) {
+		// 0だったら生成
+		if (nowArray[address_.y][col] == 0) {
+			Vec2 address = { col, address_.y };
+			result.push_back({ address, address_ });
+		} else if (nowArray[address_.y][col] / 10 == 1) {
+			Vec2 address = { col, address_.y };
+			result.push_back({ address, address_ });
+			break;
+		} else {
+			// 0以外があったらループを出る
+			break;
+		}
+	}
+
+	// 左方向を確認
+	for (int col = address_.x - 1; col >= 1; col--) {
+		// 0だったら生成
+		if (nowArray[address_.y][col] == 0) {
+			Vec2 address = { col, address_.y };
+			result.push_back({ address, address_ });
+		} else if (nowArray[address_.y][col] / 10 == 1) {
+			Vec2 address = { col, address_.y };
+			result.push_back({ address, address_ });
+			break;
+		} else {
+			// 0以外があったらループを出る
+			break;
+		}
+	}
+
+	return result;
 }

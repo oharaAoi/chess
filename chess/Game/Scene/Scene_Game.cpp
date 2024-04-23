@@ -21,6 +21,10 @@ void Scene_Game::Init(){
 
 	// 
 	board_->SetEnemy(enemy_.get());
+	board_->SetPlayer(player_.get());
+
+	minmax_ = std::make_unique<MinMaxAlgorithm>();
+	minmax_->SetBoard(board_.get());
 }
 
 //=================================================================================================================
@@ -36,8 +40,11 @@ void Scene_Game::Update(){
 	player_->Update();
 	enemy_->Update();
 
-	std::vector<Moved> a = board_->CreateCanMove();
-	a.clear();
+	/*std::vector<Moved> a = board_->CreateCanMove(Board::GetCurrentArray(), kCPU);
+	a.clear();*/
+
+	Moved move = minmax_->FindBestMove(2);
+
 
 	drawUtils_->Update(MyNovice::GetCamera()->GetVpMatrix());
 }

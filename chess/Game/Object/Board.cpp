@@ -1,6 +1,7 @@
 ﻿#include "Board.h"
 
 #include "Enemy.h"
+#include "Player.h"
 #include "BaseEntity.h"
 
 std::vector<std::vector<int>> Board::currentArray_{};
@@ -18,6 +19,7 @@ Board::~Board() {
 void Board::Init() {
 	LoadFile::LoadMapData("./Resources/json/board.json");
 
+
 	std::vector<std::vector<int>> mapArry;
 	mapArry = LoadFile::GetMapArr();
 
@@ -33,6 +35,10 @@ void Board::Init() {
 	for (int i = 0; i < rows; ++i) {
 		currentArray_[i].resize(cols);
 	}
+
+	// 行と列の上限値を決める
+	maxRow_ = rows;
+	maxCol_ = cols;
 
 	int index = 0;
 	for (int row = 0; row < rows; row++) {
@@ -62,6 +68,9 @@ void Board::Init() {
 			index++;
 		}
 	}
+
+	// 評価のため
+	pownSquareTable_ = LoadFile::LoadPieceEval("./Resources/json/EvalPiece.json", "pown");
 }
 
 //=================================================================================================================
@@ -114,18 +123,122 @@ void Board::SetCurrentArray(const Vec2& address, const PlayerType& playerType, c
 	currentArray_[address.y][address.x] = currentAddress;
 }
 
-std::vector<Moved> Board::CreateCanMove() {
+/// <summary>
+/// 今の盤面から動ける手をすべて生成する
+/// </summary>
+/// <returns></returns>
+std::vector<Moved> Board::CreateCanMove(const std::vector<std::vector<int>>& board, const PlayerType& playerType) {
 	std::vector<Moved> result{};
-	const auto& pices = enemy_->GetPices();
 
-	for (const auto& entity : pices) {
-		// 移動できる方向を駒ごとに取得
-		std::vector<Moved> piceMove = entity->GetCanMove();
-		// 取得した値を結果に格納
-		for (int oi = 0; oi < piceMove.size(); oi++) {
-			result.push_back(piceMove[oi]);
+	if (playerType == kCPU) {
+		for (const auto& entity : enemy_->GetPices()) {
+			// 移動できる方向を駒ごとに取得
+			std::vector<Moved> piceMove = entity->GetCanMove(board);
+			// 取得した値を結果に格納
+			for (int oi = 0; oi < piceMove.size(); oi++) {
+				result.push_back(piceMove[oi]);
+			}
+		}
+	} else {
+		for (const auto& entity : player_->GetPices()) {
+			// 移動できる方向を駒ごとに取得
+			std::vector<Moved> piceMove = entity->GetCanMove(board);
+			// 取得した値を結果に格納
+			for (int oi = 0; oi < piceMove.size(); oi++) {
+				result.push_back(piceMove[oi]);
+			}
 		}
 	}
 
 	return result;
+}
+
+/// <summary>
+/// 引数の移動の情報を適用した配列を生成
+/// </summary>
+/// <param name="move"></param>
+/// <returns></returns>
+void Board::CreateMovedArray(const Moved& move) {
+	// from(今の場所)の情報をto(移動する場所)に代入する
+	currentArray_[move.toMove.y][move.toMove.x] = currentArray_[move.fromMove.y][move.fromMove.x];
+	// fromの場所には駒がなくなる
+	currentArray_[move.fromMove.y][move.fromMove.x] = 0;
+}
+
+/// <summary>
+/// 移動を適用した配列を戻すための関数
+/// </summary>
+/// <param name="move"></param>
+void Board::CreateUndoMovedArray(const Moved& move) {
+	// toをfromに戻す
+	currentArray_[move.fromMove.y][move.fromMove.x] = currentArray_[move.toMove.y][move.toMove.x];
+	// toの場所には駒がなくなる
+	currentArray_[move.toMove.y][move.toMove.x] = 0;
+}
+
+int Board::Evaluation() {
+	// 結果の評価値
+	int eval = 0;
+
+	// 自分の駒の数　- 相手の駒の数　= 点を基礎スコアとする
+	for (int row = 0; row < maxRow_; row++) {
+		for (int col = 0; col < maxCol_; col++) {
+			switch (currentArray_[row][col] % 10) {
+			case PawnType:
+				if (currentArray_[row][col] / 10 == 1) {
+					eval -= pieceValues_["PawnType"];
+				} else {
+					eval += pieceValues_["PawnType"];
+				}
+				break;
+
+			case KnightType:
+				if (currentArray_[row][col] / 10 == 1) {
+					eval -= pieceValues_["KnightType"];
+				} else {
+					eval += pieceValues_["KnightType"];
+				}
+				
+				break;
+
+			case BishopType:
+				if (currentArray_[row][col] / 10 == 1) {
+					eval -= pieceValues_["BishopType"];
+				} else {
+					eval += pieceValues_["BishopType"];
+				}
+				
+				break;
+
+			case RookType:
+				if (currentArray_[row][col] / 10 == 1) {
+					eval -= pieceValues_["RookType"];
+				} else {
+					eval += pieceValues_["RookType"];
+				}
+				
+				break;
+
+			case QueenType:
+				if (currentArray_[row][col] / 10 == 1) {
+					eval -= pieceValues_["QueenType"];
+				} else {
+					eval += pieceValues_["QueenType"];
+				}
+				
+				break;
+
+			case KingType:
+				if (currentArray_[row][col] / 10 == 1) {
+					eval -= pieceValues_["KingType"];
+				} else {
+					eval += pieceValues_["KingType"];
+				}
+				
+				break;
+			}
+		}
+	}
+
+	return  eval;
 }

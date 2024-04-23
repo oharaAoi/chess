@@ -4,6 +4,9 @@
 #include "MyMath.h"
 #include "Board.h"
 
+#include <limits>
+#include <algorithm>
+
 struct EvalDate {
 	Vec2 moveToIndex;// どこのアドレスに移動するか
 	int evaluation; // 評価値
@@ -25,11 +28,16 @@ public:
 	/// </summary>
 	/// <param name="depth"></param>
 	/// <param name="maximizingPlayer"></param>
-	//int minmax(int depth, int alpha, int beta, bool maximizingPlayer);
+	int AlphaBeta(int depth, int alpha, int beta, bool maximizingPlayer);
+
+
+	Moved FindBestMove(int depth);
+
+	void SetBoard(Board* board) { board_ = board; };
 
 private:
 
-
+	Board* board_ = nullptr;
 
 };
 

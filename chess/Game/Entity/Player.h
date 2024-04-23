@@ -40,6 +40,8 @@ public:
 	/// </summary>
 	void BoardSetting();
 
+	const std::vector<std::unique_ptr<BaseEntity>>& GetPices() const { return pices_; }
+
 private:
 
 	/*std::vector<std::unique_ptr<Pawn>> pawn_;

@@ -48,7 +48,10 @@ void PieceMovePlace::IsClick() {
 	}
 }
 
-std::vector<Moved> PieceMovePlace::GetCanMove() {
-	return std::vector<Moved>();
+std::vector<Moved> PieceMovePlace::GetCanMove(const std::vector<std::vector<int>>& board) {
+	std::vector<Moved> result{};
+	std::vector<std::vector<int>> nowArray = board;
+
+	return result;
 }
 

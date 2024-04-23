@@ -14,7 +14,7 @@ enum PieceType {
 
 struct Moved {
 	Vec2 toMove;
-	Vec2 formMove;
+	Vec2 fromMove;
 };
 
 
@@ -38,7 +38,7 @@ public:
 
 	virtual PieceType GetPieceType() const { return pieceType_; }
 
-	virtual std::vector<Moved> GetCanMove() = 0;
+	virtual std::vector<Moved> GetCanMove(const std::vector<std::vector<int>>& board) = 0;
 
 protected:
 

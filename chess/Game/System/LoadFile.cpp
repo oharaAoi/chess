@@ -50,6 +50,25 @@ void LoadFile::LoadPiceSetData(std::string fileName) {
 	}
 }
 
+std::vector<std::vector<int>> LoadFile::LoadPieceEval(const std::string& filePath, const std::string& pieceType) {
+	std::vector<std::vector<int>> resultArray{};
+	json boradData;
+
+	std::ifstream inputFile(filePath);
+
+	if (inputFile.is_open()) {
+		inputFile >> boradData;
+
+		resultArray = boradData[pieceType]["tiles"];
+
+		std::reverse(resultArray.begin(), resultArray.end());
+		// ファイルを閉じる
+		inputFile.close();
+	}
+
+	return resultArray;
+}
+
 void LoadFile::LoadEntityData(const std::string& filePath) {
 	json entityData;
 

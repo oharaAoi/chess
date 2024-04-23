@@ -127,14 +127,31 @@ void Pawn::MovePlaceDraw() {
 	}
 }
 
-std::vector<Moved> Pawn::GetCanMove() {
+/// <summary>
+/// 敵と味方で反転しないと行けない
+/// </summary>
+/// <returns></returns>
+std::vector<Moved> Pawn::GetCanMove(const std::vector<std::vector<int>>& board) {
 	std::vector<Moved> result{};
-	std::vector<std::vector<int>> nowArray = Board::GetCurrentArray();
+	std::vector<std::vector<int>> nowArray = board;
 	// 上を確認
 	// 0(何もなかったら生成)
 	if (nowArray[address_.y - 1][address_.x] == 0) {
-		Vec2 address = { address_.x , address_.y + 1 };
+		Vec2 address = { address_.x , address_.y - 1 };
 		result.push_back({ address , address_ });
 	}
+
+	// 右上を確認(敵がいたらtrue)
+	if (nowArray[address_.y - 1][address_.x + 1] / 10 == 1) {
+		Vec2 address = { address_.x + 1 , address_.y - 1 };
+		result.push_back({ address , address_ });
+	}
+
+	// 左上を確認(敵がいたらtrue)
+	if (nowArray[address_.y - 1][address_.x - 1] / 10 == 1) {
+		Vec2 address = { address_.x - 1 , address_.y - 1 };
+		result.push_back({ address , address_ });
+	}
+
 	return result;
 }

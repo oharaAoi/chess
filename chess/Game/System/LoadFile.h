@@ -48,6 +48,8 @@ public:
 
 	static void LoadEntityData(const std::string& filePath);
 
+	static std::vector<std::vector<int>> LoadPieceEval(const std::string& filePath, const std::string& pieceType);
+
 public:
 
 	static std::vector<std::vector<int>> GetMapArr() { return mapArr_; }

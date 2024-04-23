@@ -14,6 +14,8 @@
 #include "Camera.h"
 #include "DrawUtils.h"
 
+#include "MinMaxAlgorithm.h"
+
 class Scene_Game
 :public Base_Scene{
 
@@ -38,5 +40,7 @@ private:
 	// system
 	std::unique_ptr<DrawUtils> drawUtils_;
 
+	std::unique_ptr<MinMaxAlgorithm> minmax_;
 };
+
 

@@ -93,6 +93,10 @@ void Queen::MovePlaceInit() {
 			if (!isOver) {
 				if (nowArray[checkAddress.y][checkAddress.x] == 0) {
 					movePlaces_.push_back(std::make_unique<PieceMovePlace>(checkAddress));
+				} else if(nowArray[checkAddress.y][checkAddress.x] / 2 == 1) {
+					// 敵がいたらbreak
+					movePlaces_.push_back(std::make_unique<PieceMovePlace>(checkAddress));
+					break;
 				} else {
 					break;
 				}
@@ -141,6 +145,45 @@ void Queen::MovePlaceDraw() {
 	}
 }
 
-std::vector<Moved> Queen::GetCanMove() {
-	return std::vector<Moved>();
+std::vector<Moved> Queen::GetCanMove(const std::vector<std::vector<int>>& board) {
+	std::vector<Moved> result{};
+	std::vector<std::vector<int>> nowArray = board;
+	// 入れつからアドレスを計算する最大値を計算する
+	int maxLine = static_cast<int>(nowArray.size()) - 1;
+
+	int movedX[] = { 0, 1, 1, 1, 0, -1, -1, -1 };
+	int movedY[] = { 1, 1, 0, -1, -1, -1, 0, 1 };
+
+	for (int oi = 0; oi < 8; oi++) {
+		for (int ai = 1; ai < 9; ai++) {
+			Vec2 checkAddress = address_;
+			checkAddress.x += ai * movedX[oi];
+			checkAddress.y += ai * movedY[oi];
+
+			bool isOver = false;
+
+			// 値が範囲を超えているかをまず調べる
+			if (checkAddress.x <= 0 || checkAddress.x >= maxLine) {
+				isOver = true;
+			}
+
+			if (checkAddress.y <= 0 || checkAddress.y >= maxLine) {
+				isOver = true;
+			}
+
+			if (!isOver) {
+				if (nowArray[checkAddress.y][checkAddress.x] == 0) {
+					result.push_back({ checkAddress , address_ });
+				} else if (nowArray[checkAddress.y][checkAddress.x] / 2 == 1) {
+					// 敵がいたらbreak
+					result.push_back({ checkAddress , address_ });
+					break;
+				} else {
+					break;
+				}
+			}
+		}
+	}
+
+	return result;
 }

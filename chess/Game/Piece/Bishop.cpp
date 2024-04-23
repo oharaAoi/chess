@@ -165,9 +165,9 @@ void Bishop::MovePlaceDraw() {
 	}
 }
 
-std::vector<Moved> Bishop::GetCanMove() {
+std::vector<Moved> Bishop::GetCanMove(const std::vector<std::vector<int>>& board) {
 	std::vector<Moved> result{};
-	std::vector<std::vector<int>> nowArray = Board::GetCurrentArray();
+	std::vector<std::vector<int>> nowArray = board;
 	// 入れつからアドレスを計算する最大値を計算する
 	int maxLine = static_cast<int>(nowArray.size()) - 1;
 
@@ -177,6 +177,10 @@ std::vector<Moved> Bishop::GetCanMove() {
 		// 0だったら生成
 		if (nowArray[checkAddress.y][checkAddress.x] == 0) {
 			result.push_back({ checkAddress , address_});
+		} else if (nowArray[checkAddress.y][checkAddress.x] / 10 == 1) {
+			// 1(敵がいたら)だったら
+			result.push_back({ checkAddress , address_ });
+			break;
 		} else {
 			// 0以外があったらループを出る
 			break;
@@ -191,6 +195,11 @@ std::vector<Moved> Bishop::GetCanMove() {
 		// 0だったら生成
 		if (nowArray[checkAddress.y][checkAddress.x] == 0) {
 			result.push_back({ checkAddress , address_ });
+
+		} else if (nowArray[checkAddress.y][checkAddress.x] / 10 == 1) {
+			// 1(敵がいたら)だったら
+			result.push_back({ checkAddress , address_ });
+			break;
 		} else {
 			// 0以外があったらループを出る
 			break;
@@ -205,6 +214,10 @@ std::vector<Moved> Bishop::GetCanMove() {
 		// 0だったら生成
 		if (nowArray[checkAddress.y][checkAddress.x] == 0) {
 			result.push_back({ checkAddress , address_ });
+		} else if (nowArray[checkAddress.y][checkAddress.x] / 10 == 1) {
+			// 1(敵がいたら)だったら
+			result.push_back({ checkAddress , address_ });
+			break;
 		} else {
 			// 0以外があったらループを出る
 			break;
@@ -219,6 +232,10 @@ std::vector<Moved> Bishop::GetCanMove() {
 		// 0だったら生成
 		if (nowArray[checkAddress.y][checkAddress.x] == 0) {
 			result.push_back({ checkAddress , address_ });
+		} else if (nowArray[checkAddress.y][checkAddress.x] / 10 == 1) {
+			// 1(敵がいたら)だったら
+			result.push_back({ checkAddress , address_ });
+			break;
 		} else {
 			// 0以外があったらループを出る
 			break;
