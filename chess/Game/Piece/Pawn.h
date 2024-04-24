@@ -23,6 +23,11 @@ public:
 
 	void Move(const Vec2& moveToAddress);
 
+	/// <summary>
+	/// 動いた後の処理
+	/// </summary>
+	void MovedInit();
+
 	// 移動範囲に関する関数
 	void MovePlaceInit();
 

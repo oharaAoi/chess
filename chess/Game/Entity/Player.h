@@ -42,6 +42,10 @@ public:
 
 	const std::vector<std::unique_ptr<BaseEntity>>& GetPices() const { return pices_; }
 
+	bool GetIsPoint() const { return isPoint_; }
+
+	void SetIsPoint(const bool& isPoint) { isPoint_ = isPoint; }
+
 private:
 
 	/*std::vector<std::unique_ptr<Pawn>> pawn_;
@@ -51,8 +55,10 @@ private:
 	std::unique_ptr<Queen> queen_;
 	std::unique_ptr<King> king_;*/
 
-
 	std::vector<std::unique_ptr<BaseEntity>> pices_;
+
+	// 駒を指したか
+	bool isPoint_;
 
 };
 

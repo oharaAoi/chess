@@ -32,6 +32,7 @@ void Pawn::Init(const Vec2& address){
 	address_ = address;
 
 	isIdle_ = false;
+	isPoint_ = false;
 
 	pieceType_ = PawnType;
 }
@@ -40,6 +41,7 @@ void Pawn::Init(const Vec2& address){
 //	↓　更新
 //=================================================================================================================
 void Pawn::Update(){
+	isPoint_ = false;
 	isPreIdle_ = isIdle_;
 	// カーソルがあっているか判断
 	CheackOnCursor(MyNovice::GetMousePosf());
@@ -71,6 +73,14 @@ void Pawn::Draw(){
 void Pawn::Move(const Vec2& moveToAddress) {
 	pos_ = { moveToAddress.x * 64.0f - 32.0f, moveToAddress.y * 64.0f - 32.0f };
 	address_ = moveToAddress;
+}
+
+void Pawn::MovedInit() {
+	movePlaces_.clear();
+
+	isPoint_ = true;
+	isIdle_ = false;
+	isCursorOn_ = false;
 }
 
 //=================================================================================================================
@@ -105,6 +115,7 @@ void Pawn::MovePlaceUpdate() {
 				// 移動したら配列をクリアする
 				movePlaces_.clear();
 
+				isPoint_ = true;
 				// フラグもfalseにする
 				isIdle_ = false;
 				isCursorOn_ = false;

@@ -30,7 +30,13 @@ public:
 
 	virtual void CheackOnCursor(const Vec2f& mousePos);
 
+	virtual void MoveAI(const Moved& move);
+
 	virtual void IsClicked();
+
+	virtual bool GetIsPoint() const { return isPoint_; }
+
+	virtual void SetIsPoint(const bool& isPoint) { isPoint_ = isPoint; }
 
 public:
 
@@ -39,6 +45,7 @@ public:
 	virtual PieceType GetPieceType() const { return pieceType_; }
 
 	virtual std::vector<Moved> GetCanMove(const std::vector<std::vector<int>>& board) = 0;
+
 
 protected:
 
@@ -72,6 +79,8 @@ protected:
 	// 動く待機状態か判断する
 	bool isIdle_;
 	bool isPreIdle_;
+
+	bool isPoint_;
 
 	PieceType pieceType_;
 };

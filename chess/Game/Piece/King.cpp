@@ -29,11 +29,13 @@ void King::Init(const Vec2& address) {
 	address_ = address;
 
 	isIdle_ = false;
+	isPoint_ = false;
 
 	pieceType_ = KingType;
 }
 
 void King::Update() {
+	isPoint_ = false;
 	isPreIdle_ = isIdle_;
 	// カーソルがあっているか判断
 	CheackOnCursor(MyNovice::GetMousePosf());
@@ -62,6 +64,15 @@ void King::Draw() {
 void King::Move(const Vec2& moveToAddress) {
 	pos_ = { moveToAddress.x * 64.0f - 32.0f, moveToAddress.y * 64.0f - 32.0f };
 	address_ = moveToAddress;
+}
+
+void King::MovedInit() {
+	pos_ = { address_.x * 64.0f - 32.0f, address_.y * 64.0f - 32.0f };
+	movePlaces_.clear();
+
+	isPoint_ = true;
+	isIdle_ = false;
+	isCursorOn_ = false;
 }
 
 void King::MovePlaceInit() {
@@ -113,6 +124,7 @@ void King::MovePlaceUpdate() {
 				// 移動したら配列をクリアする
 				movePlaces_.clear();
 
+				isPoint_ = true;
 				// フラグもfalseにする
 				isIdle_ = false;
 				isCursorOn_ = false;

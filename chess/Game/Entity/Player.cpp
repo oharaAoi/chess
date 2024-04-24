@@ -95,12 +95,20 @@ void Player::Init() {
 			}
 		}
 	}
+
+	isPoint_ = false;
 }
 
 void Player::Update() {
 	// 駒のupdate
 	for (int oi = 0; oi < pices_.size(); oi++) {
 		pices_[oi]->Update();
+
+		// ピースのアップデート中に指されたらbreak
+		if (pices_[oi]->GetIsPoint()) {
+			isPoint_ = true;
+			break;
+		}
 	}
 }
 

@@ -29,11 +29,13 @@ void Knight::Init(const Vec2& address) {
 	address_ = address;
 
 	isIdle_ = false;
+	isPoint_ = false;
 
 	pieceType_ = KnightType;
 }
 
 void Knight::Update() {
+	isPoint_ = false;
 	isPreIdle_ = isIdle_;
 	// カーソルがあっているか判断
 	CheackOnCursor(MyNovice::GetMousePosf());
@@ -62,6 +64,14 @@ void Knight::Draw() {
 void Knight::Move(const Vec2& moveToAddress) {
 	pos_ = { moveToAddress.x * 64.0f - 32.0f, moveToAddress.y * 64.0f - 32.0f };
 	address_ = moveToAddress;
+}
+
+void Knight::MovedInit() {
+	movePlaces_.clear();
+
+	isPoint_ = true;
+	isIdle_ = false;
+	isCursorOn_ = false;
 }
 
 void Knight::MovePlaceInit() {
@@ -114,6 +124,7 @@ void Knight::MovePlaceUpdate() {
 				// 移動したら配列をクリアする
 				movePlaces_.clear();
 
+				isPoint_ = true;
 				// フラグもfalseにする
 				isIdle_ = false;
 				isCursorOn_ = false;

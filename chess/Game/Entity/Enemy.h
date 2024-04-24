@@ -35,9 +35,18 @@ public:
 	/// </summary>
 	void BoardSetting();
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="move"></param>
+	void AiPoint(const Moved& move);
+
 private:
 
 	std::vector<std::unique_ptr<BaseEntity>> pices_;
+
+	// 駒を指したか
+	bool isPoint_;
 
 };
 

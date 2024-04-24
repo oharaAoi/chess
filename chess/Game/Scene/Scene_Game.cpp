@@ -40,11 +40,11 @@ void Scene_Game::Update(){
 	player_->Update();
 	enemy_->Update();
 
-	/*std::vector<Moved> a = board_->CreateCanMove(Board::GetCurrentArray(), kCPU);
-	a.clear();*/
 
-	Moved move = minmax_->FindBestMove(2);
-
+	if (player_->GetIsPoint()) {
+		enemy_->AiPoint(minmax_->FindBestMove(2));
+		player_->SetIsPoint(false);
+	}
 
 	drawUtils_->Update(MyNovice::GetCamera()->GetVpMatrix());
 }

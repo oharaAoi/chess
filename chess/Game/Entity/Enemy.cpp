@@ -62,6 +62,8 @@ void Enemy::Init() {
 			}
 		}
 	}
+
+	isPoint_ = false;
 }
 
 void Enemy::Update() {
@@ -82,4 +84,13 @@ void Enemy::BoardSetting() {
 	for (int oi = 0; oi < pices_.size(); oi++) {
 		Board::SetCurrentArray(pices_[oi]->GetAddress(), kCPU, pices_[oi]->GetPieceType());
 	}
+}
+
+void Enemy::AiPoint(const Moved& move) {
+	for (int oi = 0; oi < pices_.size(); oi++) {
+		pices_[oi]->MoveAI(move);
+		pices_[oi]->SetIsPoint(false);
+	}
+
+	isPoint_ = true;
 }
