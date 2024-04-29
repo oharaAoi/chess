@@ -1,13 +1,13 @@
 ﻿#include "Queen.h"
 
-Queen::Queen(const Vec2& address) {
-	Init(address);
+Queen::Queen(const Vec2& address, const PlayerType& type) {
+	Init(address, type);
 }
 
 Queen::~Queen() {
 }
 
-void Queen::Init(const Vec2& address) {
+void Queen::Init(const Vec2& address, const PlayerType& type) {
 	LoadFile::LoadEntityData("./Resources/json/queen.json");
 	// ファイルから読み取る
 	scale_ = LoadFile::GetEntityState().scale;
@@ -24,14 +24,24 @@ void Queen::Init(const Vec2& address) {
 
 	color_ = 0xffffffff;
 
-	GH_ = Novice::LoadTexture("./Resources/pices.png");
-
 	address_ = address;
 
 	isIdle_ = false;
 	isPoint_ = false;
+	isAlive_ = true;
 
 	pieceType_ = QueenType;
+
+	if (type == kPlayer) {
+		checkType_ = kCPU;
+		coefficient_ = 1;
+		GH_ = Novice::LoadTexture("./Resources/whitePiece.png");
+
+	} else {
+		checkType_ = kPlayer;
+		coefficient_ = -1;
+		GH_ = Novice::LoadTexture("./Resources/blackPiece.png");
+	}
 }
 
 void Queen::Update() {
@@ -100,10 +110,11 @@ void Queen::MovePlaceInit() {
 				isOver = true;
 			}
 
+
 			if (!isOver) {
 				if (nowArray[checkAddress.y][checkAddress.x] == 0) {
 					movePlaces_.push_back(std::make_unique<PieceMovePlace>(checkAddress));
-				} else if(nowArray[checkAddress.y][checkAddress.x] / 2 == 1) {
+				} else if(nowArray[checkAddress.y][checkAddress.x] / 10 == static_cast<int>(checkType_ + 1)) {
 					// 敵がいたらbreak
 					movePlaces_.push_back(std::make_unique<PieceMovePlace>(checkAddress));
 					break;
@@ -185,7 +196,7 @@ std::vector<Moved> Queen::GetCanMove(const std::vector<std::vector<int>>& board)
 			if (!isOver) {
 				if (nowArray[checkAddress.y][checkAddress.x] == 0) {
 					result.push_back({ checkAddress , address_ });
-				} else if (nowArray[checkAddress.y][checkAddress.x] / 2 == 1) {
+				} else if (nowArray[checkAddress.y][checkAddress.x] / 2 == static_cast<int>(checkType_ + 1)) {
 					// 敵がいたらbreak
 					result.push_back({ checkAddress , address_ });
 					break;

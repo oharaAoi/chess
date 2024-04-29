@@ -9,10 +9,10 @@ class Pawn
 : public BaseEntity{
 public:
 
-	Pawn(const Vec2& address);
+	Pawn(const Vec2& address, const PlayerType& type);
 	virtual ~Pawn();
 
-	void Init(const Vec2& address);
+	void Init(const Vec2& address, const PlayerType& type);
 	void Update()override;
 	void Draw()override;
 

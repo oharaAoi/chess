@@ -7,14 +7,13 @@
 #include "LoadFile.h"
 #include "BaseEntity.h"
 
+// 評価
+#include "PieceValueEval.h"
+#include "PiecePlaceEval.h"
+
 class Enemy;
 class Player;
 class BaseEntity;
-
-enum PlayerType {
-	kPlayer,
-	kCPU
-};
 
 class Board {
 public:
@@ -74,13 +73,6 @@ public:
 
 private:
 
-	std::unordered_map<std::string, int> pieceValues_ = {
-		{"PawnType", 100}, {"KnightType", 400}, {"BishopType", 400}, {"RookType", 600},
-		{"QueenType", 1200}, {"KingType", 1000000}
-	};
-
-	std::vector<std::vector<int>> pownSquareTable_;
-
 	std::vector<std::unique_ptr<Block>> block_;
 
 	static std::vector<std::vector<int>> currentArray_;
@@ -93,5 +85,8 @@ private:
 	// プレイヤーのインスタンスも保持して置く
 	Player* player_ = nullptr;
 
+	// 評価するクラス
+	std::unique_ptr<PieceValueEval> pieceValueEval_;
+	std::unique_ptr<PiecePlaceEval> piecePlaceEval_;
 };
 

@@ -9,10 +9,10 @@ class King
 	: public BaseEntity {
 public:
 
-	King(const Vec2& address);
+	King(const Vec2& address, const PlayerType& type);
 	virtual ~King();
 
-	void Init(const Vec2& address);
+	void Init(const Vec2& address, const PlayerType& type);
 	void Update()override;
 	void Draw()override;
 

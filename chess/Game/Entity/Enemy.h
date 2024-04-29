@@ -41,12 +41,21 @@ public:
 	/// <param name="move"></param>
 	void AiPoint(const Moved& move);
 
+	/// <summary>
+	/// 当たり判定を取った後に取られていないかを判断する関数
+	/// </summary>
+	void CheckIsAlive();
+
+	bool GetIsLose() const { return isLose_; }
+
 private:
 
 	std::vector<std::unique_ptr<BaseEntity>> pices_;
 
 	// 駒を指したか
 	bool isPoint_;
+	// キングが取られたか
+	bool isLose_;
 
 };
 

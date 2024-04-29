@@ -9,10 +9,10 @@ class Knight
 	:public BaseEntity{
 public:
 
-	Knight(const Vec2& address);
+	Knight(const Vec2& address, const PlayerType& type);
 	virtual ~Knight();
 
-	void Init(const Vec2& address);
+	void Init(const Vec2& address, const PlayerType& type);
 	void Update()override;
 	void Draw()override;
 

@@ -8,10 +8,10 @@
 class Bishop : public BaseEntity {
 public:
 
-	Bishop(const Vec2& address);
+	Bishop(const Vec2& address, const PlayerType& type);
 	virtual ~Bishop();
 
-	void Init(const Vec2& address);
+	void Init(const Vec2& address, const PlayerType& type);
 	void Update()override;
 	void Draw()override;
 

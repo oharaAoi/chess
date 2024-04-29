@@ -25,12 +25,26 @@ void Scene_Game::Init(){
 
 	minmax_ = std::make_unique<MinMaxAlgorithm>();
 	minmax_->SetBoard(board_.get());
+
+	collisionManager_ = std::make_unique<CollisionManager>(player_.get(), enemy_.get());
+
+	isGameSet_ = false;
+
+	moved_ = { {0,0}, {0,0} };
 }
 
 //=================================================================================================================
 //	↓　
 //=================================================================================================================
 void Scene_Game::Update(){
+	if (player_->GetIsLose() || enemy_->GetIsLose()) {
+		isGameSet_ = true;
+	}
+
+	if (isGameSet_) {
+		return;
+	}
+
 	// 盤面の初期化(現在の駒の状況を一旦リセットし次の処理で更新するため)
 	board_->Updata();
 	// 盤面の状態を更新する
@@ -40,10 +54,26 @@ void Scene_Game::Update(){
 	player_->Update();
 	enemy_->Update();
 
-
+	// playerが指したら入る
 	if (player_->GetIsPoint()) {
-		enemy_->AiPoint(minmax_->FindBestMove(2));
+		// まずplayerの駒と敵の駒の当たり判定を取る(当たっていたら敵の駒が取られる)
+		collisionManager_->OnCollision(player_->GetIsPoint());
+
+		// playerの指すターンが終わる
 		player_->SetIsPoint(false);
+
+		// 敵の駒の生きている判定を取る
+		enemy_->CheckIsAlive();
+
+		// ボードの状態を更新
+		enemy_->BoardSetting();
+
+		// 敵が駒を指す
+		moved_ = minmax_->FindBestMove(3);
+		enemy_->AiPoint(moved_);
+
+		// 当たり判定をとる(当たっていたらplayerの駒が取れる)
+		collisionManager_->OnCollision(player_->GetIsPoint());
 	}
 
 	drawUtils_->Update(MyNovice::GetCamera()->GetVpMatrix());
@@ -61,5 +91,21 @@ void Scene_Game::Draw(){
 
 	ImGui::Begin("Scene");
 	ImGui::Text("Scene_Game");
+	ImGui::End();
+
+	ImGui::Begin("Result");
+	if (player_->GetIsLose()) {
+		ImGui::Text("CPU : WIN");
+	} else if (enemy_->GetIsLose()) {
+		ImGui::Text("PLAYER : WIN");
+	} else {
+		ImGui::Text("Game");
+	}
+
+	// move
+	ImGui::Text("Move");
+	ImGui::Text("from: col: %d, row: %d", moved_.fromMove.x, moved_.fromMove.y);
+	ImGui::Text("to: col: %d, row: %d", moved_.toMove.x, moved_.toMove.y);
+
 	ImGui::End();
 }

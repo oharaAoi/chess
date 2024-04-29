@@ -69,8 +69,9 @@ void Board::Init() {
 		}
 	}
 
-	// 評価のため
-	pownSquareTable_ = LoadFile::LoadPieceEval("./Resources/json/EvalPiece.json", "pown");
+	// 評価をするクラス
+	pieceValueEval_ = std::make_unique<PieceValueEval>(maxRow_, maxCol_);
+	piecePlaceEval_ = std::make_unique<PiecePlaceEval>(maxRow_, maxCol_);
 }
 
 //=================================================================================================================
@@ -180,65 +181,13 @@ int Board::Evaluation() {
 	// 結果の評価値
 	int eval = 0;
 
-	// 自分の駒の数　- 相手の駒の数　= 点を基礎スコアとする
-	for (int row = 0; row < maxRow_; row++) {
-		for (int col = 0; col < maxCol_; col++) {
-			switch (currentArray_[row][col] % 10) {
-			case PawnType:
-				if (currentArray_[row][col] / 10 == 1) {
-					eval -= pieceValues_["PawnType"];
-				} else {
-					eval += pieceValues_["PawnType"];
-				}
-				break;
+	// 駒の価値で評価
+	eval = pieceValueEval_->Eval();
 
-			case KnightType:
-				if (currentArray_[row][col] / 10 == 1) {
-					eval -= pieceValues_["KnightType"];
-				} else {
-					eval += pieceValues_["KnightType"];
-				}
-				
-				break;
-
-			case BishopType:
-				if (currentArray_[row][col] / 10 == 1) {
-					eval -= pieceValues_["BishopType"];
-				} else {
-					eval += pieceValues_["BishopType"];
-				}
-				
-				break;
-
-			case RookType:
-				if (currentArray_[row][col] / 10 == 1) {
-					eval -= pieceValues_["RookType"];
-				} else {
-					eval += pieceValues_["RookType"];
-				}
-				
-				break;
-
-			case QueenType:
-				if (currentArray_[row][col] / 10 == 1) {
-					eval -= pieceValues_["QueenType"];
-				} else {
-					eval += pieceValues_["QueenType"];
-				}
-				
-				break;
-
-			case KingType:
-				if (currentArray_[row][col] / 10 == 1) {
-					eval -= pieceValues_["KingType"];
-				} else {
-					eval += pieceValues_["KingType"];
-				}
-				
-				break;
-			}
-		}
-	}
+	// 駒の位置で評価
+	/*for (const auto& entity : enemy_->GetPices()) {
+		piecePlaceEval_->Eval(entity->GetAddress(), entity->GetPieceType());
+	}*/
 
 	return  eval;
 }

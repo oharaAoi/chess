@@ -9,10 +9,10 @@ class Rook
 	: public BaseEntity {
 public:
 
-	Rook(const Vec2& address);
+	Rook(const Vec2& address, const PlayerType& type);
 	virtual ~Rook();
 
-	void Init(const Vec2& address);
+	void Init(const Vec2& address, const PlayerType& type);
 	void Update()override;
 	void Draw()override;
 

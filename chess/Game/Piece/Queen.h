@@ -9,10 +9,10 @@ class Queen
 	: public BaseEntity {
 public:
 
-	Queen(const Vec2& address);
+	Queen(const Vec2& address, const PlayerType& type);
 	virtual ~Queen();
 
-	void Init(const Vec2& address);
+	void Init(const Vec2& address, const PlayerType& type);
 	void Update()override;
 	void Draw()override;
 

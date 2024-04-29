@@ -1,13 +1,13 @@
 ﻿#include "Knight.h"
 
-Knight::Knight(const Vec2& address) {
-	Init(address);
+Knight::Knight(const Vec2& address, const PlayerType& type) {
+	Init(address, type);
 }
 
 Knight::~Knight() {
 }
 
-void Knight::Init(const Vec2& address) {
+void Knight::Init(const Vec2& address, const PlayerType& type) {
 	LoadFile::LoadEntityData("./Resources/json/knight.json");
 	// ファイルから読み取る
 	scale_ = LoadFile::GetEntityState().scale;
@@ -24,14 +24,24 @@ void Knight::Init(const Vec2& address) {
 
 	color_ = 0xffffffff;
 
-	GH_ = Novice::LoadTexture("./Resources/pices.png");
-
 	address_ = address;
 
 	isIdle_ = false;
 	isPoint_ = false;
+	isAlive_ = true;
 
 	pieceType_ = KnightType;
+
+	if (type == kPlayer) {
+		checkType_ = kCPU;
+		coefficient_ = 1;
+		GH_ = Novice::LoadTexture("./Resources/whitePiece.png");
+
+	} else {
+		checkType_ = kPlayer;
+		coefficient_ = -1;
+		GH_ = Novice::LoadTexture("./Resources/blackPiece.png");
+	}
 }
 
 void Knight::Update() {
@@ -101,6 +111,9 @@ void Knight::MovePlaceInit() {
 
 		if (!isOver) {
 			if (nowArray[checkAddress.y][checkAddress.x] == 0) {
+				movePlaces_.push_back(std::make_unique<PieceMovePlace>(checkAddress));
+			} else if (nowArray[checkAddress.y][checkAddress.x] / 10 == static_cast<int>(checkType_ + 1)) {
+				// 敵の駒があったら
 				movePlaces_.push_back(std::make_unique<PieceMovePlace>(checkAddress));
 			}
 		}
@@ -175,7 +188,7 @@ std::vector<Moved> Knight::GetCanMove(const std::vector<std::vector<int>>& board
 		if (!isOver) {
 			if (nowArray[checkAddress.y][checkAddress.x] == 0) {
 				result.push_back({ checkAddress , address_ });
-			} else if (nowArray[checkAddress.y][checkAddress.x] / 10 == 1) {
+			} else if (nowArray[checkAddress.y][checkAddress.x] / 10 == static_cast<int>(checkType_ + 1)) {
 				result.push_back({ checkAddress , address_ });
 			}
 		}

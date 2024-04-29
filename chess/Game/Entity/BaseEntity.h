@@ -3,6 +3,11 @@
 #include "Matrix.h"
 #include "MyMath.h"
 
+enum PlayerType {
+	kPlayer,
+	kCPU
+};
+
 enum PieceType {
 	PawnType = 1,
 	KnightType,
@@ -35,8 +40,10 @@ public:
 	virtual void IsClicked();
 
 	virtual bool GetIsPoint() const { return isPoint_; }
-
 	virtual void SetIsPoint(const bool& isPoint) { isPoint_ = isPoint; }
+
+	virtual bool GetIsAlive() const { return isAlive_; }
+	virtual void SetIsAlive(const bool& isAlive) { isAlive_ = isAlive; }
 
 public:
 
@@ -83,6 +90,12 @@ protected:
 	bool isPoint_;
 
 	PieceType pieceType_;
+
+	// 駒がプレイヤーを取るかCPUを取るか
+	PlayerType checkType_;
+
+	// プラスかマイナスの係数
+	int coefficient_;
 };
 
 

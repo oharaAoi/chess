@@ -1,6 +1,7 @@
 ﻿#include "MinMaxAlgorithm.h"
 
 MinMaxAlgorithm::MinMaxAlgorithm() {
+	roopCount_ = 0;
 }
 
 MinMaxAlgorithm::~MinMaxAlgorithm() {
@@ -16,6 +17,7 @@ MinMaxAlgorithm::~MinMaxAlgorithm() {
 /// <param name="maximizingPlayer"></param>
 /// <returns></returns>
 int MinMaxAlgorithm::AlphaBeta(int depth, int alpha, int beta, bool maximizingPlayer) {
+	roopCount_++;
 	// 深さが0に達したら関数を終了する
 	if (depth == 0) {
 		return board_->Evaluation(); // ここに評価関数が入る予定;

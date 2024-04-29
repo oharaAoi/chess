@@ -1,7 +1,7 @@
 ﻿#include "Pawn.h"
 
-Pawn::Pawn(const Vec2& address){
-	Init(address);
+Pawn::Pawn(const Vec2& address, const PlayerType& type){
+	Init(address, type);
 }
 
 Pawn::~Pawn(){
@@ -10,7 +10,7 @@ Pawn::~Pawn(){
 //=================================================================================================================
 //	↓　初期化
 //=================================================================================================================
-void Pawn::Init(const Vec2& address){
+void Pawn::Init(const Vec2& address, const PlayerType& type){
 	LoadFile::LoadEntityData("./Resources/json/pawn.json");
 	// ファイルから読み取る
 	scale_ = LoadFile::GetEntityState().scale;
@@ -26,15 +26,25 @@ void Pawn::Init(const Vec2& address){
 	worldMatrix_ = MakeAffineMatrix(scale_, theta_, pos_);
 
 	color_ = 0xffffffff;
-	
-	GH_ = Novice::LoadTexture("./Resources/pices.png");
 
 	address_ = address;
 
 	isIdle_ = false;
 	isPoint_ = false;
+	isAlive_ = true;
 
 	pieceType_ = PawnType;
+
+	if (type == kPlayer) {
+		checkType_ = kCPU;
+		coefficient_ = 1;
+		GH_ = Novice::LoadTexture("./Resources/whitePiece.png");
+
+	} else {
+		checkType_ = kPlayer;
+		coefficient_ = -1;
+		GH_ = Novice::LoadTexture("./Resources/blackPiece.png");
+	}
 }
 
 //=================================================================================================================
@@ -90,12 +100,21 @@ void Pawn::MovePlaceInit() {
 	std::vector<std::vector<int>> nowArray = Board::GetCurrentArray();
 	// 上を確認
 	// 0(何もなかったら生成)
-	if (nowArray[address_.y + 1][address_.x] == 0) {
-		Vec2 address = { address_.x , address_.y + 1 };
+	if (nowArray[address_.y + (1 * coefficient_)][address_.x] == 0) {
+		Vec2 address = { address_.x , address_.y + (1 * coefficient_) };
 		movePlaces_.push_back(std::make_unique<PieceMovePlace>(address));
 	}
 
 	// 右上と左上を確認して敵の駒があったら取れる
+	if (nowArray[address_.y + (1 * coefficient_)][address_.x + 1 ] / 10 == static_cast<int>(checkType_ + 1)) {
+		Vec2 address = { address_.x + 1 , address_.y + (1 * coefficient_) };
+		movePlaces_.push_back(std::make_unique<PieceMovePlace>(address));
+	}
+
+	if (nowArray[address_.y + (1 * coefficient_)][address_.x - 1] / 10 == static_cast<int>(checkType_ + 1)) {
+		Vec2 address = { address_.x - 1 , address_.y + (1 * coefficient_) };
+		movePlaces_.push_back(std::make_unique<PieceMovePlace>(address));
+	}
 }
 
 void Pawn::MovePlaceUpdate() {
@@ -147,20 +166,20 @@ std::vector<Moved> Pawn::GetCanMove(const std::vector<std::vector<int>>& board) 
 	std::vector<std::vector<int>> nowArray = board;
 	// 上を確認
 	// 0(何もなかったら生成)
-	if (nowArray[address_.y - 1][address_.x] == 0) {
-		Vec2 address = { address_.x , address_.y - 1 };
+	if (nowArray[address_.y + (1 * coefficient_)][address_.x] == 0) {
+		Vec2 address = { address_.x , address_.y + (1 * coefficient_) };
 		result.push_back({ address , address_ });
 	}
 
 	// 右上を確認(敵がいたらtrue)
-	if (nowArray[address_.y - 1][address_.x + 1] / 10 == 1) {
-		Vec2 address = { address_.x + 1 , address_.y - 1 };
+	if (nowArray[address_.y + (1 * coefficient_)][address_.x + 1] / 10 == 1) {
+		Vec2 address = { address_.x + 1 , address_.y + (1 * coefficient_) };
 		result.push_back({ address , address_ });
 	}
 
 	// 左上を確認(敵がいたらtrue)
-	if (nowArray[address_.y - 1][address_.x - 1] / 10 == 1) {
-		Vec2 address = { address_.x - 1 , address_.y - 1 };
+	if (nowArray[address_.y + (1 * coefficient_)][address_.x - 1] / 10 == 1) {
+		Vec2 address = { address_.x - 1 , address_.y + (1 * coefficient_) };
 		result.push_back({ address , address_ });
 	}
 

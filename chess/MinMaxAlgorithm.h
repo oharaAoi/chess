@@ -39,5 +39,7 @@ private:
 
 	Board* board_ = nullptr;
 
+	int32_t roopCount_;
+
 };
 

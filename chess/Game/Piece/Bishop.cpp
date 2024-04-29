@@ -1,13 +1,13 @@
 ﻿#include "Bishop.h"
 
-Bishop::Bishop(const Vec2& address) {
-	Init(address);
+Bishop::Bishop(const Vec2& address, const PlayerType& type) {
+	Init(address, type);
 }
 
 Bishop::~Bishop() {
 }
 
-void Bishop::Init(const Vec2& address) {
+void Bishop::Init(const Vec2& address, const PlayerType& type) {
 	LoadFile::LoadEntityData("./Resources/json/bishop.json");
 	// ファイルから読み取る
 	scale_ = LoadFile::GetEntityState().scale;
@@ -24,14 +24,24 @@ void Bishop::Init(const Vec2& address) {
 
 	color_ = 0xffffffff;
 
-	GH_ = Novice::LoadTexture("./Resources/pices.png");
-
 	address_ = address;
 
 	isIdle_ = false;
 	isPoint_ = false;
+	isAlive_ = true;
 
 	pieceType_ = BishopType;
+
+	if (type == kPlayer) {
+		checkType_ = kCPU;
+		coefficient_ = 1;
+		GH_ = Novice::LoadTexture("./Resources/whitePiece.png");
+
+	} else {
+		checkType_ = kPlayer;
+		coefficient_ = -1;
+		GH_ = Novice::LoadTexture("./Resources/blackPiece.png");
+	}
 }
 
 void Bishop::Update() {
@@ -85,6 +95,12 @@ void Bishop::MovePlaceInit() {
 		// 0だったら生成
 		if (nowArray[checkAddress.y][checkAddress.x] == 0) {
 			movePlaces_.push_back(std::make_unique<PieceMovePlace>(checkAddress));
+
+		} else if (nowArray[checkAddress.y][checkAddress.x] / 10 == static_cast<int>(checkType_ + 1)) {
+			// 敵の駒があったら
+			movePlaces_.push_back(std::make_unique<PieceMovePlace>(checkAddress));
+			break;
+
 		} else {
 			// 0以外があったらループを出る
 			break;
@@ -99,6 +115,11 @@ void Bishop::MovePlaceInit() {
 		// 0だったら生成
 		if (nowArray[checkAddress.y][checkAddress.x] == 0) {
 			movePlaces_.push_back(std::make_unique<PieceMovePlace>(checkAddress));
+		} else if (nowArray[checkAddress.y][checkAddress.x] / 10 == static_cast<int>(checkType_ + 1)) {
+			// 敵の駒があったら
+			movePlaces_.push_back(std::make_unique<PieceMovePlace>(checkAddress));
+			break;
+
 		} else {
 			// 0以外があったらループを出る
 			break;
@@ -113,6 +134,11 @@ void Bishop::MovePlaceInit() {
 		// 0だったら生成
 		if (nowArray[checkAddress.y][checkAddress.x] == 0) {
 			movePlaces_.push_back(std::make_unique<PieceMovePlace>(checkAddress));
+		} else if (nowArray[checkAddress.y][checkAddress.x] / 10 == static_cast<int>(checkType_ + 1)) {
+			// 敵の駒があったら
+			movePlaces_.push_back(std::make_unique<PieceMovePlace>(checkAddress));
+			break;
+
 		} else {
 			// 0以外があったらループを出る
 			break;
@@ -127,6 +153,11 @@ void Bishop::MovePlaceInit() {
 		// 0だったら生成
 		if (nowArray[checkAddress.y][checkAddress.x] == 0) {
 			movePlaces_.push_back(std::make_unique<PieceMovePlace>(checkAddress));
+		} else if (nowArray[checkAddress.y][checkAddress.x] / 10 == static_cast<int>(checkType_ + 1)) {
+			// 敵の駒があったら
+			movePlaces_.push_back(std::make_unique<PieceMovePlace>(checkAddress));
+			break;
+
 		} else {
 			// 0以外があったらループを出る
 			break;
@@ -189,7 +220,7 @@ std::vector<Moved> Bishop::GetCanMove(const std::vector<std::vector<int>>& board
 		// 0だったら生成
 		if (nowArray[checkAddress.y][checkAddress.x] == 0) {
 			result.push_back({ checkAddress , address_});
-		} else if (nowArray[checkAddress.y][checkAddress.x] / 10 == 1) {
+		} else if (nowArray[checkAddress.y][checkAddress.x] / 10 == static_cast<int>(checkType_ + 1)) {
 			// 1(敵がいたら)だったら
 			result.push_back({ checkAddress , address_ });
 			break;
@@ -208,7 +239,7 @@ std::vector<Moved> Bishop::GetCanMove(const std::vector<std::vector<int>>& board
 		if (nowArray[checkAddress.y][checkAddress.x] == 0) {
 			result.push_back({ checkAddress , address_ });
 
-		} else if (nowArray[checkAddress.y][checkAddress.x] / 10 == 1) {
+		} else if (nowArray[checkAddress.y][checkAddress.x] / 10 == static_cast<int>(checkType_ + 1)) {
 			// 1(敵がいたら)だったら
 			result.push_back({ checkAddress , address_ });
 			break;
@@ -226,7 +257,7 @@ std::vector<Moved> Bishop::GetCanMove(const std::vector<std::vector<int>>& board
 		// 0だったら生成
 		if (nowArray[checkAddress.y][checkAddress.x] == 0) {
 			result.push_back({ checkAddress , address_ });
-		} else if (nowArray[checkAddress.y][checkAddress.x] / 10 == 1) {
+		} else if (nowArray[checkAddress.y][checkAddress.x] / 10 == static_cast<int>(checkType_ + 1)) {
 			// 1(敵がいたら)だったら
 			result.push_back({ checkAddress , address_ });
 			break;
@@ -244,7 +275,7 @@ std::vector<Moved> Bishop::GetCanMove(const std::vector<std::vector<int>>& board
 		// 0だったら生成
 		if (nowArray[checkAddress.y][checkAddress.x] == 0) {
 			result.push_back({ checkAddress , address_ });
-		} else if (nowArray[checkAddress.y][checkAddress.x] / 10 == 1) {
+		} else if (nowArray[checkAddress.y][checkAddress.x] / 10 == static_cast<int>(checkType_ + 1)) {
 			// 1(敵がいたら)だったら
 			result.push_back({ checkAddress , address_ });
 			break;

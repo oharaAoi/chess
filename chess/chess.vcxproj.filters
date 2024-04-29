@@ -155,6 +155,15 @@
     <ClCompile Include="MinMaxAlgorithm.cpp">
       <Filter>KamataEngine</Filter>
     </ClCompile>
+    <ClCompile Include="PieceValueEval.cpp">
+      <Filter>KamataEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="PiecePlaceEval.cpp">
+      <Filter>KamataEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Manager\CollisionManager.cpp">
+      <Filter>Game\Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\KamataEngine\DirectXGame\audio\Audio.h">
@@ -331,5 +340,10 @@
       <Filter>Game\Entity</Filter>
     </ClInclude>
     <ClInclude Include="MinMaxAlgorithm.h" />
+    <ClInclude Include="PieceValueEval.h" />
+    <ClInclude Include="PiecePlaceEval.h" />
+    <ClInclude Include="Game\Manager\CollisionManager.h">
+      <Filter>Game\Manager</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

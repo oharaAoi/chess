@@ -37,33 +37,34 @@ void Enemy::Init() {
 
 			switch (setArry[row][col]) {
 			case PawnType:
-				pices_.push_back(std::make_unique<Pawn>(address));
+				pices_.push_back(std::make_unique<Pawn>(address, kCPU));
 				break;
 
 			case KnightType:
-				pices_.push_back(std::make_unique<Knight>(address));
+				pices_.push_back(std::make_unique<Knight>(address, kCPU));
 				break;
 
 			case BishopType:
-				pices_.push_back(std::make_unique<Bishop>(address));
+				pices_.push_back(std::make_unique<Bishop>(address, kCPU));
 				break;
 
 			case RookType:
-				pices_.push_back(std::make_unique<Rook>(address));
+				pices_.push_back(std::make_unique<Rook>(address, kCPU));
 				break;
 
 			case QueenType:
-				pices_.push_back(std::make_unique<Queen>(address));
+				pices_.push_back(std::make_unique<Queen>(address, kCPU));
 				break;
 
 			case KingType:
-				pices_.push_back(std::make_unique<King>(address));
+				pices_.push_back(std::make_unique<King>(address, kCPU));
 				break;
 			}
 		}
 	}
 
 	isPoint_ = false;
+	isLose_ = false;
 }
 
 void Enemy::Update() {
@@ -93,4 +94,18 @@ void Enemy::AiPoint(const Moved& move) {
 	}
 
 	isPoint_ = true;
+}
+
+void Enemy::CheckIsAlive() {
+	// 駒の削除
+	for (int oi = 0; oi < pices_.size(); oi++) {
+		if (!pices_[oi]->GetIsAlive()) {
+			// 勝敗の判定
+			if (pices_[oi]->GetPieceType() == KingType) {
+				isLose_ = true;;
+			}
+
+			pices_.erase(pices_.begin() + oi);
+		}
+	}
 }

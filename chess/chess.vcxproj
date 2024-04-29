@@ -126,6 +126,7 @@ xcopy C:\KamataEngine\DirectXGame\Resources "$(OutDirFullPath)NoviceResources" /
     <ClCompile Include="Game\Lib\MyRandom.cpp" />
     <ClCompile Include="Game\Lib\MyVector2.cpp" />
     <ClCompile Include="Game\Lib\RectVertex.cpp" />
+    <ClCompile Include="Game\Manager\CollisionManager.cpp" />
     <ClCompile Include="Game\Manager\InputManager.cpp" />
     <ClCompile Include="Game\Manager\SceneManager.cpp" />
     <ClCompile Include="Game\Object\Base_Object.cpp" />
@@ -145,6 +146,8 @@ xcopy C:\KamataEngine\DirectXGame\Resources "$(OutDirFullPath)NoviceResources" /
     <ClCompile Include="Game\System\MyNovice.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MinMaxAlgorithm.cpp" />
+    <ClCompile Include="PiecePlaceEval.cpp" />
+    <ClCompile Include="PieceValueEval.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\KamataEngine\DirectXGame\base\StringUtility.h" />
@@ -191,6 +194,7 @@ xcopy C:\KamataEngine\DirectXGame\Resources "$(OutDirFullPath)NoviceResources" /
     <ClInclude Include="Game\Lib\RectStruct.h" />
     <ClInclude Include="Game\Lib\RectVertex.h" />
     <ClInclude Include="Game\Lib\SoundStruct.h" />
+    <ClInclude Include="Game\Manager\CollisionManager.h" />
     <ClInclude Include="Game\Manager\InputManager.h" />
     <ClInclude Include="Game\Manager\SceneManager.h" />
     <ClInclude Include="Game\Object\Base_Object.h" />
@@ -209,6 +213,8 @@ xcopy C:\KamataEngine\DirectXGame\Resources "$(OutDirFullPath)NoviceResources" /
     <ClInclude Include="Game\System\LoadFile.h" />
     <ClInclude Include="Game\System\MyNovice.h" />
     <ClInclude Include="MinMaxAlgorithm.h" />
+    <ClInclude Include="PiecePlaceEval.h" />
+    <ClInclude Include="PieceValueEval.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

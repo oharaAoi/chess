@@ -1,13 +1,13 @@
 ﻿#include "Rook.h"
 
-Rook::Rook(const Vec2& address) {
-	Init(address);
+Rook::Rook(const Vec2& address, const PlayerType& type) {
+	Init(address, type);
 }
 
 Rook::~Rook() {
 }
 
-void Rook::Init(const Vec2& address) {
+void Rook::Init(const Vec2& address, const PlayerType& type) {
 	LoadFile::LoadEntityData("./Resources/json/rook.json");
 	// ファイルから読み取る
 	scale_ = LoadFile::GetEntityState().scale;
@@ -24,14 +24,24 @@ void Rook::Init(const Vec2& address) {
 
 	color_ = 0xffffffff;
 
-	GH_ = Novice::LoadTexture("./Resources/pices.png");
-
 	address_ = address;
 
 	isIdle_ = false;
 	isPoint_ = false;
+	isAlive_ = true;
 
 	pieceType_ = RookType;
+
+	if (type == kPlayer) {
+		checkType_ = kCPU;
+		coefficient_ = 1;
+		GH_ = Novice::LoadTexture("./Resources/whitePiece.png");
+
+	} else {
+		checkType_ = kPlayer;
+		coefficient_ = -1;
+		GH_ = Novice::LoadTexture("./Resources/blackPiece.png");
+	}
 }
 
 void Rook::Update() {
@@ -86,7 +96,7 @@ void Rook::MovePlaceInit() {
 		if (nowArray[row][address_.x] == 0) {
 			Vec2 address = { address_.x , row };
 			movePlaces_.push_back(std::make_unique<PieceMovePlace>(address));
-		} else if (nowArray[row][address_.x] / 10 == 1) {
+		} else if (nowArray[row][address_.x] / 10 == static_cast<int>(checkType_ + 1)) {
 			// 敵がいた場合
 			Vec2 address = { address_.x , row };
 			movePlaces_.push_back(std::make_unique<PieceMovePlace>(address));
@@ -104,7 +114,7 @@ void Rook::MovePlaceInit() {
 		if (nowArray[row][address_.x] == 0) {
 			Vec2 address = { address_.x , row };
 			movePlaces_.push_back(std::make_unique<PieceMovePlace>(address));
-		} else if (nowArray[row][address_.x] / 10 == 1) {
+		} else if (nowArray[row][address_.x] / 10 == static_cast<int>(checkType_ + 1)) {
 			// 敵がいた場合
 			Vec2 address = { address_.x , row };
 			movePlaces_.push_back(std::make_unique<PieceMovePlace>(address));
@@ -122,7 +132,7 @@ void Rook::MovePlaceInit() {
 		if (nowArray[address_.y][col] == 0) {
 			Vec2 address = { col, address_.y };
 			movePlaces_.push_back(std::make_unique<PieceMovePlace>(address));
-		} else if (nowArray[address_.y][col] / 10 == 1) {
+		} else if (nowArray[address_.y][col] / 10 == static_cast<int>(checkType_ + 1)) {
 			// 敵がいた場合
 			Vec2 address = { col, address_.y };
 			movePlaces_.push_back(std::make_unique<PieceMovePlace>(address));
@@ -140,7 +150,7 @@ void Rook::MovePlaceInit() {
 		if (nowArray[address_.y][col] == 0) {
 			Vec2 address = { col, address_.y };
 			movePlaces_.push_back(std::make_unique<PieceMovePlace>(address));
-		} else if (nowArray[address_.y][col] / 10 == 1) {
+		} else if (nowArray[address_.y][col] / 10 == static_cast<int>(checkType_ + 1)) {
 			// 敵がいた場合
 			Vec2 address = { col, address_.y };
 			movePlaces_.push_back(std::make_unique<PieceMovePlace>(address));
@@ -205,7 +215,7 @@ std::vector<Moved> Rook::GetCanMove(const std::vector<std::vector<int>>& board) 
 		if (nowArray[row][address_.x] == 0) {
 			Vec2 address = { address_.x , row };
 			result.push_back({ address, address_ });
-		} else if (nowArray[row][address_.x] / 10 == 1) {
+		} else if (nowArray[row][address_.x] / 10 == static_cast<int>(checkType_ + 1)) {
 			Vec2 address = { address_.x , row };
 			result.push_back({ address, address_ });
 			break;
@@ -221,7 +231,7 @@ std::vector<Moved> Rook::GetCanMove(const std::vector<std::vector<int>>& board) 
 		if (nowArray[row][address_.x] == 0) {
 			Vec2 address = { address_.x , row };
 			result.push_back({ address, address_ });
-		} else if (nowArray[row][address_.x] / 10 == 1) {
+		} else if (nowArray[row][address_.x] / 10 == static_cast<int>(checkType_ + 1)) {
 			Vec2 address = { address_.x , row };
 			result.push_back({ address, address_ });
 			break;
@@ -237,7 +247,7 @@ std::vector<Moved> Rook::GetCanMove(const std::vector<std::vector<int>>& board) 
 		if (nowArray[address_.y][col] == 0) {
 			Vec2 address = { col, address_.y };
 			result.push_back({ address, address_ });
-		} else if (nowArray[address_.y][col] / 10 == 1) {
+		} else if (nowArray[address_.y][col] / 10 == static_cast<int>(checkType_ + 1)) {
 			Vec2 address = { col, address_.y };
 			result.push_back({ address, address_ });
 			break;
@@ -253,7 +263,7 @@ std::vector<Moved> Rook::GetCanMove(const std::vector<std::vector<int>>& board) 
 		if (nowArray[address_.y][col] == 0) {
 			Vec2 address = { col, address_.y };
 			result.push_back({ address, address_ });
-		} else if (nowArray[address_.y][col] / 10 == 1) {
+		} else if (nowArray[address_.y][col] / 10 == static_cast<int>(checkType_ + 1)) {
 			Vec2 address = { col, address_.y };
 			result.push_back({ address, address_ });
 			break;

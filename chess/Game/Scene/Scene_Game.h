@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <memory>
 #include "MyNovice.h"
 
@@ -15,6 +15,7 @@
 #include "DrawUtils.h"
 
 #include "MinMaxAlgorithm.h"
+#include "CollisionManager.h"
 
 class Scene_Game
 :public Base_Scene{
@@ -41,6 +42,13 @@ private:
 	std::unique_ptr<DrawUtils> drawUtils_;
 
 	std::unique_ptr<MinMaxAlgorithm> minmax_;
+
+	std::unique_ptr<CollisionManager> collisionManager_;
+
+	bool isGameSet_;
+
+	// どう移動したか
+	Moved moved_;
 };
 
 
