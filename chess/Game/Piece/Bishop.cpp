@@ -289,3 +289,112 @@ std::vector<Moved> Bishop::GetCanMove(const std::vector<std::vector<int>>& board
 
 	return result;
 }
+
+int Bishop::PieceMobility(const std::vector<std::vector<int>>& board) {
+	int moveCount = 0;
+
+	int maxLine = static_cast<int>(board.size()) - 1;
+
+	Vec2 checkAddress = { address_.x + 1, address_.y + 1 };
+	// 右上方向を確認する
+	while (checkAddress.x != maxLine && checkAddress.y != maxLine) {
+		// 0だったら生成
+		if (board[checkAddress.y][checkAddress.x] == 0) {
+			moveCount++;
+		} else if (board[checkAddress.y][checkAddress.x] / 10 == static_cast<int>(checkType_ + 1)) {
+			// 1(敵がいたら)だったら
+			moveCount++;
+			moveCount += PieceGetting(static_cast<PieceType>(board[checkAddress.y][checkAddress.x] % 10));
+			break;
+		} else {
+			// 0以外があったらループを出る
+			break;
+		}
+
+		checkAddress = { checkAddress.x + 1, checkAddress.y + 1 };
+	}
+
+	// 左上を確認
+	checkAddress = { address_.x - 1, address_.y + 1 };
+	while (checkAddress.x != 0 && checkAddress.y != maxLine) {
+		// 0だったら生成
+		if (board[checkAddress.y][checkAddress.x] == 0) {
+			moveCount++;
+
+		} else if (board[checkAddress.y][checkAddress.x] / 10 == static_cast<int>(checkType_ + 1)) {
+			// 1(敵がいたら)だったら
+			moveCount++;
+			moveCount += PieceGetting(static_cast<PieceType>(board[checkAddress.y][checkAddress.x] % 10));
+			break;
+		} else {
+			// 0以外があったらループを出る
+			break;
+		}
+
+		checkAddress = { checkAddress.x - 1, checkAddress.y + 1 };
+	}
+
+	// 右下を確認
+	checkAddress = { address_.x + 1, address_.y - 1 };
+	while (checkAddress.x != maxLine && checkAddress.y != 0) {
+		// 0だったら生成
+		if (board[checkAddress.y][checkAddress.x] == 0) {
+			moveCount++;
+		} else if (board[checkAddress.y][checkAddress.x] / 10 == static_cast<int>(checkType_ + 1)) {
+			// 1(敵がいたら)だったら
+			moveCount++;
+			moveCount += PieceGetting(static_cast<PieceType>(board[checkAddress.y][checkAddress.x] % 10));
+			break;
+		} else {
+			// 0以外があったらループを出る
+			break;
+		}
+
+		checkAddress = { checkAddress.x + 1, checkAddress.y - 1 };
+	}
+
+	// 左下を確認
+	checkAddress = { address_.x - 1, address_.y - 1 };
+	while (checkAddress.x != 0 && checkAddress.y != 0) {
+		// 0だったら生成
+		if (board[checkAddress.y][checkAddress.x] == 0) {
+			moveCount++;
+		} else if (board[checkAddress.y][checkAddress.x] / 10 == static_cast<int>(checkType_ + 1)) {
+			// 1(敵がいたら)だったら
+			moveCount++;
+			moveCount += PieceGetting(static_cast<PieceType>(board[checkAddress.y][checkAddress.x] % 10));
+			break;
+		} else {
+			// 0以外があったらループを出る
+			break;
+		}
+
+		checkAddress = { checkAddress.x - 1, checkAddress.y - 1 };
+	}
+
+	return mobility_[moveCount];
+}
+
+int Bishop::PieceGetting(const PieceType& type) {
+	switch (type) {
+	case PawnType:
+		return 10;	
+		
+	case KnightType:
+		return 40;		
+		
+	case BishopType:
+		return 40;	
+		
+	case RookType:
+		return 60;	
+		
+	case QueenType:
+		return 100;	
+		
+	case KingType:
+		return 1000;	
+	}
+
+	return 0;
+}

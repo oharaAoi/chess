@@ -10,6 +10,7 @@
 // 評価
 #include "PieceValueEval.h"
 #include "PiecePlaceEval.h"
+#include "KingSafeEval.h"
 
 class Enemy;
 class Player;
@@ -28,8 +29,11 @@ public:
 public:
 
 	static std::vector<std::vector<int>> GetCurrentArray() { return currentArray_; }
-
 	static void SetCurrentArray(const Vec2& address, const PlayerType& playerType, const PieceType& pieceType);
+	static void SetCurrentArray(const std::vector<std::vector<int>>& board) { currentArray_ = board; }
+
+	static std::vector<std::vector<int>> GetKeepArray() { return keepArray_; }
+	static void SetKeepArray() { keepArray_ = currentArray_; }
 
 	/// <summary>
 	/// エネミーのインスタンスをセット
@@ -39,7 +43,7 @@ public:
 
 	/// <summary>
 	/// プレイヤーのインスタンスをセット
-	/// </summary>
+	/// </summary>s
 	/// <param name="player"></param>
 	void SetPlayer(Player* player) { player_ = player; }
 
@@ -76,6 +80,7 @@ private:
 	std::vector<std::unique_ptr<Block>> block_;
 
 	static std::vector<std::vector<int>> currentArray_;
+	static std::vector<std::vector<int>> keepArray_;
 
 	int maxRow_;
 	int maxCol_;
@@ -88,5 +93,6 @@ private:
 	// 評価するクラス
 	std::unique_ptr<PieceValueEval> pieceValueEval_;
 	std::unique_ptr<PiecePlaceEval> piecePlaceEval_;
+	std::unique_ptr<KingSafeEval> kingSafeEval_;
 };
 

@@ -55,3 +55,18 @@ std::vector<Moved> PieceMovePlace::GetCanMove(const std::vector<std::vector<int>
 	return result;
 }
 
+int PieceMovePlace::PieceMobility(const std::vector<std::vector<int>>& board) {
+	std::vector<std::vector<int>> nowArray = board;
+	nowArray.clear();
+	return 0;
+}
+
+int PieceMovePlace::PieceGetting(const PieceType& type) {
+	if (type == PawnType) {
+		return 0;
+	}
+	return 0;
+}
+
+
+

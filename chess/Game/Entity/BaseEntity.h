@@ -53,6 +53,13 @@ public:
 
 	virtual std::vector<Moved> GetCanMove(const std::vector<std::vector<int>>& board) = 0;
 
+	/// <summary>
+	/// 駒の可動性
+	/// </summary>
+	/// <returns>駒が何マス動けるか</returns>
+	virtual int PieceMobility(const std::vector<std::vector<int>>& board) = 0;
+
+	virtual int PieceGetting(const PieceType& type) = 0;
 
 protected:
 

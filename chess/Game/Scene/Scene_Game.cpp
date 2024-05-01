@@ -45,14 +45,15 @@ void Scene_Game::Update(){
 		return;
 	}
 
+	player_->Update();
+	enemy_->Update();
+
 	// 盤面の初期化(現在の駒の状況を一旦リセットし次の処理で更新するため)
 	board_->Updata();
+
 	// 盤面の状態を更新する
 	player_->BoardSetting();
 	enemy_->BoardSetting();
-
-	player_->Update();
-	enemy_->Update();
 
 	// playerが指したら入る
 	if (player_->GetIsPoint()) {
@@ -75,6 +76,13 @@ void Scene_Game::Update(){
 		// 当たり判定をとる(当たっていたらplayerの駒が取れる)
 		collisionManager_->OnCollision(player_->GetIsPoint());
 	}
+
+	// 盤面の初期化(現在の駒の状況を一旦リセットし次の処理で更新するため)
+	board_->Updata();
+
+	// 盤面の状態を更新する
+	player_->BoardSetting();
+	enemy_->BoardSetting();
 
 	drawUtils_->Update(MyNovice::GetCamera()->GetVpMatrix());
 }
@@ -102,10 +110,25 @@ void Scene_Game::Draw(){
 		ImGui::Text("Game");
 	}
 
+	ImGui::Spacing();
+	ImGui::Spacing();
+
 	// move
 	ImGui::Text("Move");
 	ImGui::Text("from: col: %d, row: %d", moved_.fromMove.x, moved_.fromMove.y);
 	ImGui::Text("to: col: %d, row: %d", moved_.toMove.x, moved_.toMove.y);
+
+	ImGui::Spacing();
+	ImGui::Spacing();
+
+	ImGui::Text("Count");
+	ImGui::Text("roopCount: %d", minmax_->GetRoopCount());
+
+	ImGui::Spacing();
+	ImGui::Spacing();
+
+	ImGui::Text("Evalution");
+	ImGui::Text("eval: %d", minmax_->GetEval());
 
 	ImGui::End();
 }

@@ -44,6 +44,9 @@
     <Filter Include="KamataEngine\Adapter\Source">
       <UniqueIdentifier>{d966e9f8-e880-44ae-8586-a08515e4cffc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Evalution">
+      <UniqueIdentifier>{2bb50e66-865b-445a-b0c6-6aab80a83cf3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="C:\KamataEngine\DirectXGame\base\DirectXCommon.cpp">
@@ -155,14 +158,20 @@
     <ClCompile Include="MinMaxAlgorithm.cpp">
       <Filter>KamataEngine</Filter>
     </ClCompile>
-    <ClCompile Include="PieceValueEval.cpp">
-      <Filter>KamataEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="PiecePlaceEval.cpp">
-      <Filter>KamataEngine</Filter>
-    </ClCompile>
     <ClCompile Include="Game\Manager\CollisionManager.cpp">
       <Filter>Game\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Evalution\PiecePlaceEval.cpp">
+      <Filter>Game\Evalution</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Evalution\PieceValueEval.cpp">
+      <Filter>Game\Evalution</Filter>
+    </ClCompile>
+    <ClCompile Include="PieceMobilityEval.cpp">
+      <Filter>KamataEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="KingSafeEval.cpp">
+      <Filter>KamataEngine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -340,10 +349,16 @@
       <Filter>Game\Entity</Filter>
     </ClInclude>
     <ClInclude Include="MinMaxAlgorithm.h" />
-    <ClInclude Include="PieceValueEval.h" />
-    <ClInclude Include="PiecePlaceEval.h" />
     <ClInclude Include="Game\Manager\CollisionManager.h">
       <Filter>Game\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="Game\Evalution\PiecePlaceEval.h">
+      <Filter>Game\Evalution</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Evalution\PieceValueEval.h">
+      <Filter>Game\Evalution</Filter>
+    </ClInclude>
+    <ClInclude Include="PieceMobilityEval.h" />
+    <ClInclude Include="KingSafeEval.h" />
   </ItemGroup>
 </Project>

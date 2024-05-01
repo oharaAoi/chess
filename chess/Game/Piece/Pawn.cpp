@@ -185,3 +185,55 @@ std::vector<Moved> Pawn::GetCanMove(const std::vector<std::vector<int>>& board) 
 
 	return result;
 }
+
+int Pawn::PieceMobility(const std::vector<std::vector<int>>& board) {
+	int moveCount = 0;
+	std::vector<std::vector<int>> nowArray = board;
+
+	// 上を確認
+	// 0(何もなかったら生成)
+	if (nowArray[address_.y + (1 * coefficient_)][address_.x] == 0) {
+		Vec2 address = { address_.x , address_.y + (1 * coefficient_) };
+		moveCount++;
+	}
+
+	// 右上を確認(敵がいたらtrue)
+	if (nowArray[address_.y + (1 * coefficient_)][address_.x + 1] / 10 == 1) {
+		Vec2 address = { address_.x + 1 , address_.y + (1 * coefficient_) };
+		moveCount++;
+		moveCount += PieceGetting(static_cast<PieceType>(nowArray[address_.y + (1 * coefficient_)][address_.x + 1] % 10));
+	}
+
+	// 左上を確認(敵がいたらtrue)
+	if (nowArray[address_.y + (1 * coefficient_)][address_.x - 1] / 10 == 1) {
+		Vec2 address = { address_.x - 1 , address_.y + (1 * coefficient_) };
+		moveCount++;
+		moveCount += PieceGetting(static_cast<PieceType>(nowArray[address_.y + (1 * coefficient_)][address_.x + 1] % 10));
+	}
+
+	return moveCount;
+}
+
+int Pawn::PieceGetting(const PieceType& type) {
+	switch (type) {
+	case PawnType:
+		return 10;
+
+	case KnightType:
+		return 40;
+
+	case BishopType:
+		return 40;
+
+	case RookType:
+		return 60;
+
+	case QueenType:
+		return 100;
+
+	case KingType:
+		return 1000;
+	}
+
+	return 0;
+}

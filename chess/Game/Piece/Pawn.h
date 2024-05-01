@@ -41,6 +41,14 @@ public:
 	/// <returns></returns>
 	std::vector<Moved> GetCanMove(const std::vector<std::vector<int>>& board) override;
 
+	/// <summary>
+	/// 駒の可動性を評価
+	/// </summary>
+	/// <returns></returns>
+	int PieceMobility(const std::vector<std::vector<int>>& board) override;
+
+	int PieceGetting(const PieceType& type) override;
+
 private:
 
 	int GH_;

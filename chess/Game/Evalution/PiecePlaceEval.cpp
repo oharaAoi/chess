@@ -1,4 +1,5 @@
 ﻿#include "PiecePlaceEval.h"
+#include "Board.h"
 
 PiecePlaceEval::PiecePlaceEval(const int& maxRow, const int& maxCol) {
 	maxRow_ = maxRow;
@@ -10,51 +11,194 @@ PiecePlaceEval::~PiecePlaceEval() {
 }
 
 void PiecePlaceEval::Init() {
-	pownSquareTable_ = LoadFile::LoadPieceEval("./Resources/json/EvalPiece.json", "pown");
-	knightSquareTable_ = LoadFile::LoadPieceEval("./Resources/json/EvalPiece.json", "knight");
-	bishopSquareTable_ = LoadFile::LoadPieceEval("./Resources/json/EvalPiece.json", "bishop");
-	rookSquareTable_ = LoadFile::LoadPieceEval("./Resources/json/EvalPiece.json", "rook");
-	queenSquareTable_ = LoadFile::LoadPieceEval("./Resources/json/EvalPiece.json", "queen");
-	kingSquareTable_ = LoadFile::LoadPieceEval("./Resources/json/EvalPiece.json", "king");
+	ePownSquareTable_ = LoadFile::LoadPieceEval("./Resources/json/EvalPiece.json", "pown");
+	eKnightSquareTable_ = LoadFile::LoadPieceEval("./Resources/json/EvalPiece.json", "knight");
+	eBishopSquareTable_ = LoadFile::LoadPieceEval("./Resources/json/EvalPiece.json", "bishop");
+	eRookSquareTable_ = LoadFile::LoadPieceEval("./Resources/json/EvalPiece.json", "rook");
+	eQueenSquareTable_ = LoadFile::LoadPieceEval("./Resources/json/EvalPiece.json", "queen");
+	eKingSquareTable_ = LoadFile::LoadPieceEval("./Resources/json/EvalPiece.json", "king");
+
+	// 配列をコピー
+	pPownSquareTable_ = ePownSquareTable_;
+	pKnightSquareTable_ = eKnightSquareTable_;
+	pBishopSquareTable_ = eBishopSquareTable_;
+	pRookSquareTable_ = eRookSquareTable_;
+	pQueenSquareTable_ = eQueenSquareTable_;
+	pKingSquareTable_ = eKingSquareTable_;
+
+	// 反転させる
+	std::reverse(pPownSquareTable_.begin(), pPownSquareTable_.end());
+	std::reverse(pKnightSquareTable_.begin(), pKnightSquareTable_.end());
+	std::reverse(pBishopSquareTable_.begin(), pBishopSquareTable_.end());
+	std::reverse(pRookSquareTable_.begin(), pRookSquareTable_.end());
+	std::reverse(pQueenSquareTable_.begin(), pQueenSquareTable_.end());
+	std::reverse(pKingSquareTable_.begin(), pKingSquareTable_.end());
 
 }
 
-int PiecePlaceEval::Eval(const Vec2& address, const PieceType& type) {
-	int eval = 0;
+int PiecePlaceEval::Eval(std::vector<std::vector<int>> boardArray, const Vec2& address, const PieceType& type) {
+	int result;
+
+	boardArray_ = boardArray;
+	keepArray_ = Board::GetKeepArray();
 
 	for (int row = 0; row < maxRow_; row++) {
 		for (int col = 0; col < maxCol_; col++) {
 			if (address.x == col && address.y == row) {
-
 				switch (type) {
 				case PawnType:
-					eval = pownSquareTable_[row][col];
+					result = ePownSquareTable_[row][col];
+					result += CheckAddressOnWhitePiece(address);
+					return result;
 					break;
 
 				case KnightType:
-					eval = knightSquareTable_[row][col];
+					result = eKnightSquareTable_[row][col];
+					result += CheckAddressOnWhitePiece(address);
+					return result;
 					break;
 
 				case BishopType:
-					eval = bishopSquareTable_[row][col];
+					result = eBishopSquareTable_[row][col];
+					result += CheckAddressOnWhitePiece(address);
+					return result;
 					break;
 
 				case RookType:
-					eval = rookSquareTable_[row][col];
+					result = eRookSquareTable_[row][col];
+					result += CheckAddressOnWhitePiece(address);
+					return result;
 					break;
 
 				case QueenType:
-					eval = queenSquareTable_[row][col];
+					result = eQueenSquareTable_[row][col];
+					result += CheckAddressOnWhitePiece(address);
+					return result;
 					break;
 
 				case KingType:
-					eval = kingSquareTable_[row][col];
+					result = eKingSquareTable_[row][col];
+					return result;
 					break;
 				}
 			}
 		}
 	}
 
-	return eval;
+	return 0;
+}
+
+int PiecePlaceEval::WhiteEval(std::vector<std::vector<int>> boardArray, const Vec2& address, const PieceType& type) {
+	int result;
+
+	boardArray_ = boardArray;
+	keepArray_ = Board::GetKeepArray();
+
+	for (int row = 0; row < maxRow_; row++) {
+		for (int col = 0; col < maxCol_; col++) {
+			if (address.x == col && address.y == row) {
+				switch (type) {
+				case PawnType:
+					result = pPownSquareTable_[row][col];
+					result += CheckAddressOnBlackPiece(address);
+					return result;
+					break;
+
+				case KnightType:
+					result = pKnightSquareTable_[row][col];
+					result += CheckAddressOnBlackPiece(address);
+					return result;
+					break;
+
+				case BishopType:
+					result = pBishopSquareTable_[row][col];
+					result += CheckAddressOnBlackPiece(address);
+					return result;
+					break;
+
+				case RookType:
+					result = pRookSquareTable_[row][col];
+					result += CheckAddressOnBlackPiece(address);
+					return result;
+					break;
+
+				case QueenType:
+					result = pQueenSquareTable_[row][col];
+					result += CheckAddressOnBlackPiece(address);
+					return result;
+					break;
+
+				case KingType:
+					result = pKingSquareTable_[row][col];
+					result += CheckAddressOnBlackPiece(address);
+					return result;
+					break;
+				}
+			}
+		}
+	}
+
+	return 0;
+}
+
+/// <summary>
+/// 移動する盤面に相手の駒があったら補正がかかるようにする
+/// </summary>
+/// <param name="address">自色の駒のアドレス</param>
+/// <returns>補正値</returns>
+int PiecePlaceEval::CheckAddressOnWhitePiece(const Vec2& address) {
+	if (keepArray_[address.y][address.x] / 10 == (kPlayer + 1)) {
+		switch (keepArray_[address.y][address.x] % 10) {
+		case PawnType:
+			return takePieceValue_[PawnType];
+			break;
+
+		case KnightType:
+			return takePieceValue_[KnightType];
+			break;
+
+		case BishopType:
+			return takePieceValue_[BishopType];
+			break;
+
+		case RookType:
+			return takePieceValue_[RookType];
+			break;
+
+		case QueenType:
+			return takePieceValue_[QueenType];
+			break;
+		}
+	}
+
+	return 0;
+}
+
+int PiecePlaceEval::CheckAddressOnBlackPiece(const Vec2& address) {
+	if (keepArray_[address.y][address.x] / 10 == (kCPU + 1)) {
+		switch (keepArray_[address.y][address.x] % 10) {
+		case PawnType:
+			return takePieceValue_[PawnType];
+			break;
+
+		case KnightType:
+			return takePieceValue_[KnightType];
+			break;
+
+		case BishopType:
+			return takePieceValue_[BishopType];
+			break;
+
+		case RookType:
+			return takePieceValue_[RookType];
+			break;
+
+		case QueenType:
+			return takePieceValue_[QueenType];
+			break;
+		}
+	}
+
+	return 0;
 }
 

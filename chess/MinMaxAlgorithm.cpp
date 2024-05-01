@@ -65,6 +65,8 @@ int MinMaxAlgorithm::AlphaBeta(int depth, int alpha, int beta, bool maximizingPl
 			board_->CreateMovedArray(moved);
 			// 適応させた手で相手の手の評価をする
 			int eval = AlphaBeta(depth - 1, alpha, beta, true);
+			// 動きを適応させたボードを元に戻す
+			board_->CreateUndoMovedArray(moved);
 			minEval = min(minEval, eval);
 			beta = min(beta, minEval);
 			// α値を下回ったため先読みせず評価を返す
@@ -82,19 +84,28 @@ Moved MinMaxAlgorithm::FindBestMove(int depth) {
 	// 最大の評価
 	int bestEval = INT_MIN;
 
+	roopCount_ = 0;
+	eval_ = 0;
+
+	// 動ける手を探す
 	std::vector<Moved> allCanMoved = board_->CreateCanMove(Board::GetCurrentArray(), kCPU);
+
+	// 今の盤面を保存しておく
+	Board::SetKeepArray();
 
 	for (const Moved& moved : allCanMoved) {
 		// 打てる手をボードに適応させる
 		board_->CreateMovedArray(moved);
 		int eval = AlphaBeta(depth - 1, INT_MIN, INT_MAX, false);
-		board_->CreateUndoMovedArray(moved);
+		board_->SetCurrentArray(Board::GetKeepArray());
 
 		if (bestEval < eval) {
 			bestEval = eval;
 			result = moved;
 		}
 	}
+
+	eval_ = bestEval;
 
 	return result;
 }

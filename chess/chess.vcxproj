@@ -146,8 +146,10 @@ xcopy C:\KamataEngine\DirectXGame\Resources "$(OutDirFullPath)NoviceResources" /
     <ClCompile Include="Game\System\DrawUtils.cpp" />
     <ClCompile Include="Game\System\LoadFile.cpp" />
     <ClCompile Include="Game\System\MyNovice.cpp" />
+    <ClCompile Include="KingSafeEval.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MinMaxAlgorithm.cpp" />
+    <ClCompile Include="PieceMobilityEval.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\KamataEngine\DirectXGame\base\StringUtility.h" />
@@ -214,7 +216,9 @@ xcopy C:\KamataEngine\DirectXGame\Resources "$(OutDirFullPath)NoviceResources" /
     <ClInclude Include="Game\System\DrawUtils.h" />
     <ClInclude Include="Game\System\LoadFile.h" />
     <ClInclude Include="Game\System\MyNovice.h" />
+    <ClInclude Include="KingSafeEval.h" />
     <ClInclude Include="MinMaxAlgorithm.h" />
+    <ClInclude Include="PieceMobilityEval.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

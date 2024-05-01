@@ -35,11 +35,20 @@ public:
 
 	void SetBoard(Board* board) { board_ = board; };
 
+	//
+	int32_t GetRoopCount() const { return roopCount_; }
+
+	int32_t GetEval() const { return eval_; }
+ 
 private:
 
 	Board* board_ = nullptr;
 
+	// 何回AlphaBeta関数を行ったか
 	int32_t roopCount_;
+
+	// 出した評価値
+	int32_t eval_ = 0;
 
 };
 

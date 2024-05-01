@@ -38,6 +38,14 @@ public:
 	/// <returns></returns>
 	std::vector<Moved> GetCanMove(const std::vector<std::vector<int>>& board) override;
 
+	/// <summary>
+	/// 駒の可動性を評価
+	/// </summary>
+	/// <returns></returns>
+	int PieceMobility(const std::vector<std::vector<int>>& board) override;
+
+	int PieceGetting(const PieceType& type) override;
+
 private:
 
 	int GH_;
@@ -46,4 +54,7 @@ private:
 
 	// 動ける方向を示すブロックのポインタを格納した配列
 	std::vector<std::unique_ptr<PieceMovePlace>> movePlaces_;
+
+	// 可動性の評価値
+	int mobility_[8] = { -62, -53, -12, -4, 3, 13, 22, 28 };
 };

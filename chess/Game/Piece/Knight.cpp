@@ -195,3 +195,64 @@ std::vector<Moved> Knight::GetCanMove(const std::vector<std::vector<int>>& board
 	}
 	return result;
 }
+
+int Knight::PieceMobility(const std::vector<std::vector<int>>& board) {
+	int moveCount = 0;
+	// 駒の配列と行列数
+	int maxLine = static_cast<int>(board.size()) - 1;
+
+	int movedX[] = { -2, -1, 1, 2, 2, 1, -1, -2 };
+	int movedY[] = { 1, 2, 2, 1, -1, -2, -2, -1 };
+
+	for (int oi = 0; oi < 8; oi++) {
+		Vec2 checkAddress = address_;
+		checkAddress.x += movedX[oi];
+		checkAddress.y += movedY[oi];
+
+		bool isOver = false;
+
+		// 値が範囲を超えているかをまず調べる
+		if (checkAddress.x <= 0 || checkAddress.x >= maxLine) {
+			isOver = true;
+		}
+
+		if (checkAddress.y <= 0 || checkAddress.y >= maxLine) {
+			isOver = true;
+		}
+
+		if (!isOver) {
+			if (board[checkAddress.y][checkAddress.x] == 0) {
+				moveCount++;
+			} else if (board[checkAddress.y][checkAddress.x] / 10 == static_cast<int>(checkType_ + 1)) {
+				moveCount++;
+				moveCount += PieceGetting(static_cast<PieceType>(board[checkAddress.y][checkAddress.x] % 10));
+			}
+		}
+	}
+
+	return mobility_[moveCount];
+}
+
+int Knight::PieceGetting(const PieceType& type) {
+	switch (type) {
+	case PawnType:
+		return 10;
+
+	case KnightType:
+		return 40;
+
+	case BishopType:
+		return 40;
+
+	case RookType:
+		return 60;
+
+	case QueenType:
+		return 100;
+
+	case KingType:
+		return 1000;
+	}
+
+	return 0;
+}

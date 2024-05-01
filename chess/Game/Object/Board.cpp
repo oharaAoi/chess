@@ -5,6 +5,7 @@
 #include "BaseEntity.h"
 
 std::vector<std::vector<int>> Board::currentArray_{};
+std::vector<std::vector<int>> Board::keepArray_{};
 
 Board::Board() {
 	Init();
@@ -72,6 +73,7 @@ void Board::Init() {
 	// 評価をするクラス
 	pieceValueEval_ = std::make_unique<PieceValueEval>(maxRow_, maxCol_);
 	piecePlaceEval_ = std::make_unique<PiecePlaceEval>(maxRow_, maxCol_);
+	kingSafeEval_ = std::make_unique<KingSafeEval>();
 }
 
 //=================================================================================================================
@@ -177,17 +179,70 @@ void Board::CreateUndoMovedArray(const Moved& move) {
 	currentArray_[move.toMove.y][move.toMove.x] = 0;
 }
 
+/// <summary>
+/// 評価関数
+/// </summary>
+/// <returns></returns>
 int Board::Evaluation() {
+	std::vector<Vec2> addresses;
+	std::vector<PieceType> pieceTypes;
+	std::vector<PlayerType> playerTypes;
+
 	// 結果の評価値
 	int eval = 0;
 
-	// 駒の価値で評価
+	/* --------------------- 駒の価値で評価 --------------------- */
 	eval = pieceValueEval_->Eval();
 
-	// 駒の位置で評価
-	/*for (const auto& entity : enemy_->GetPices()) {
-		piecePlaceEval_->Eval(entity->GetAddress(), entity->GetPieceType());
-	}*/
+	/* --------------------- 駒の位置で評価 --------------------- */
+	for (const auto& entity : enemy_->GetPices()) {
+		eval += piecePlaceEval_->Eval(currentArray_, entity->GetAddress(), entity->GetPieceType());
+	}
+
+	for (const auto& entity : player_->GetPices()) {
+		eval -= piecePlaceEval_->WhiteEval(currentArray_, entity->GetAddress(), entity->GetPieceType());
+	}
+
+	// アドレスト駒の対応を保存
+	for (int row = 0; row < maxRow_; row++) {
+		for (int col = 0; col < maxCol_; col++) {
+			if (currentArray_[row][col] != 0) {
+				int type = currentArray_[row][col] % 10;
+				int playerType = currentArray_[row][col] / 10;
+
+				addresses.push_back({ col, row });
+				pieceTypes.push_back(static_cast<PieceType>(type));
+				playerTypes.push_back(static_cast<PlayerType>(playerType));
+			}
+		}
+	}
+
+	// 駒の位置で評価をする
+	for (size_t oi = 0; oi < addresses.size(); oi++) {
+		if (playerTypes[oi] == kPlayer) {
+			eval -= piecePlaceEval_->WhiteEval(currentArray_, addresses[oi], pieceTypes[oi]);
+		} else {
+			eval += piecePlaceEval_->Eval(currentArray_, addresses[oi], pieceTypes[oi]);
+		}
+	}
+
+	/* --------------------- 駒の可動性で評価をする --------------------- */
+	for (const auto& entity : enemy_->GetPices()) {
+		eval += entity->PieceMobility(currentArray_);
+	}
+
+	for (const auto& entity : player_->GetPices()) {
+		eval -= entity->PieceMobility(currentArray_);
+	}
+	
+	/* --------------------- キングの安全性で評価する --------------------- */
+	for (size_t oi = 0; oi < addresses.size(); oi++) {
+		if (playerTypes[oi] == kCPU) {
+			if (pieceTypes[oi] == KingType) {
+				kingSafeEval_->Eval(currentArray_, addresses[oi]);
+			}
+		}
+	}
 
 	return  eval;
 }
