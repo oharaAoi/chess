@@ -2,10 +2,13 @@
 #include <memory>
 #include <vector>
 #include <string>
+#include <stack>
 
 #include "Block.h"
 #include "LoadFile.h"
 #include "BaseEntity.h"
+
+#include "KingsAddress.h"
 
 // 評価
 #include "PieceValueEval.h"
@@ -47,6 +50,8 @@ public:
 	/// <param name="player"></param>
 	void SetPlayer(Player* player) { player_ = player; }
 
+	bool GetIsGameSet() const { return isGameSet_; }
+
 public:
 
 	/// <summary>
@@ -75,6 +80,10 @@ public:
 	/// <returns></returns>
 	int Evaluation();
 
+	void SetKingsAddress(const Vec2& player, const Vec2& cpu);
+
+	bool GetingPlayerKing(const Vec2& cpuMoveAddress);
+
 private:
 
 	std::vector<std::unique_ptr<Block>> block_;
@@ -90,9 +99,15 @@ private:
 	// プレイヤーのインスタンスも保持して置く
 	Player* player_ = nullptr;
 
+	bool isGameSet_;
+
 	// 評価するクラス
 	std::unique_ptr<PieceValueEval> pieceValueEval_;
 	std::unique_ptr<PiecePlaceEval> piecePlaceEval_;
 	std::unique_ptr<KingSafeEval> kingSafeEval_;
+
+	std::unique_ptr<KingsAddress> kingsAddress_;
+
+	std::stack<int> movePieceStack_;
 };
 

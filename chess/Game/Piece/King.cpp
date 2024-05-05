@@ -199,7 +199,10 @@ std::vector<Moved> King::GetCanMove(const std::vector<std::vector<int>>& board) 
 }
 
 int King::PieceMobility(const std::vector<std::vector<int>>& board) {
+	int result = 0;
 	int moveCount = 0;
+	int gettenCount = 0;
+
 	// 駒の配列と行列数
 	int maxLine = static_cast<int>(board.size()) - 1;
 
@@ -227,34 +230,37 @@ int King::PieceMobility(const std::vector<std::vector<int>>& board) {
 				moveCount++;
 			} else if (board[checkAddress.y][checkAddress.x] / 10 == static_cast<int>(checkType_ + 1)) {
 				moveCount++;
-				moveCount += PieceGetting(static_cast<PieceType>(board[checkAddress.y][checkAddress.x] % 10));
+				gettenCount += PieceGetting(static_cast<PieceType>(board[checkAddress.y][checkAddress.x] % 10));
 			}
 		}
 	}
 
-	return moveCount;
+	// 合計
+	result = moveCount + gettenCount;
+
+	return result;
 
 }
 
 int King::PieceGetting(const PieceType& type) {
 	switch (type) {
 	case PawnType:
-		return 10;
+		return 100;
 
 	case KnightType:
-		return 40;
+		return 400;
 
 	case BishopType:
-		return 40;
+		return 400;
 
 	case RookType:
-		return 60;
+		return 600;
 
 	case QueenType:
 		return 100;
 
 	case KingType:
-		return 1000;
+		return 100000;
 	}
 
 	return 0;

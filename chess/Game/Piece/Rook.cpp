@@ -277,7 +277,10 @@ std::vector<Moved> Rook::GetCanMove(const std::vector<std::vector<int>>& board) 
 }
 
 int Rook::PieceMobility(const std::vector<std::vector<int>>& board) {
+	int result = 0;
 	int moveCount = 0;
+	int gettenCount = 0;
+
 	// 駒の配列と行列数
 	int maxLine = static_cast<int>(board.size()) - 1;
 
@@ -290,7 +293,7 @@ int Rook::PieceMobility(const std::vector<std::vector<int>>& board) {
 		} else if (board[row][address_.x] / 10 == static_cast<int>(checkType_ + 1)) {
 			Vec2 address = { address_.x , row };
 			moveCount++;
-			moveCount += PieceGetting(static_cast<PieceType>(board[address.y][address.x] % 10));
+			gettenCount += PieceGetting(static_cast<PieceType>(board[address.y][address.x] % 10));
 			break;
 		} else {
 			// 0以外があったらループを出る
@@ -307,7 +310,7 @@ int Rook::PieceMobility(const std::vector<std::vector<int>>& board) {
 		} else if (board[row][address_.x] / 10 == static_cast<int>(checkType_ + 1)) {
 			Vec2 address = { address_.x , row };
 			moveCount++;
-			moveCount += PieceGetting(static_cast<PieceType>(board[address.y][address.x] % 10));
+			gettenCount += PieceGetting(static_cast<PieceType>(board[address.y][address.x] % 10));
 			break;
 		} else {
 			// 0以外があったらループを出る
@@ -324,7 +327,7 @@ int Rook::PieceMobility(const std::vector<std::vector<int>>& board) {
 		} else if (board[address_.y][col] / 10 == static_cast<int>(checkType_ + 1)) {
 			Vec2 address = { col, address_.y };
 			moveCount++;
-			moveCount += PieceGetting(static_cast<PieceType>(board[address.y][address.x] % 10));
+			gettenCount += PieceGetting(static_cast<PieceType>(board[address.y][address.x] % 10));
 			break;
 		} else {
 			// 0以外があったらループを出る
@@ -341,35 +344,38 @@ int Rook::PieceMobility(const std::vector<std::vector<int>>& board) {
 		} else if (board[address_.y][col] / 10 == static_cast<int>(checkType_ + 1)) {
 			Vec2 address = { col, address_.y };
 			moveCount++;
-			moveCount += PieceGetting(static_cast<PieceType>(board[address.y][address.x] % 10));
+			gettenCount += PieceGetting(static_cast<PieceType>(board[address.y][address.x] % 10));
 			break;
 		} else {
 			// 0以外があったらループを出る
 			break;
 		}
 	}
-	return  mobility_[moveCount];
+
+	result = gettenCount;
+
+	return result;
 }
 
 int Rook::PieceGetting(const PieceType& type) {
 	switch (type) {
 	case PawnType:
-		return 10;
+		return 100;
 
 	case KnightType:
-		return 40;
+		return 400;
 
 	case BishopType:
-		return 40;
+		return 400;
 
 	case RookType:
-		return 60;
+		return 600;
 
 	case QueenType:
 		return 100;
 
 	case KingType:
-		return 1000;
+		return 100000;
 	}
 
 	return 0;

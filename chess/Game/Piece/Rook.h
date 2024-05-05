@@ -56,7 +56,7 @@ private:
 	std::vector<std::unique_ptr<PieceMovePlace>> movePlaces_;
 
 	// 可動性の評価値
-	int mobility_[15] = { -60, -20, 2, 3, 3, 11, 22, 32, 40, 40, 41, 48, 57, 57, 62 };
+	int mobility_[16] = { -62, -60, -20, 2, 3, 3, 11, 22, 32, 40, 40, 41, 48, 57, 57, 62 };
 
 };
 

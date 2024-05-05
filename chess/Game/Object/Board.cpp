@@ -41,6 +41,8 @@ void Board::Init() {
 	maxRow_ = rows;
 	maxCol_ = cols;
 
+	isGameSet_ = false;
+
 	int index = 0;
 	for (int row = 0; row < rows; row++) {
 		for (int col = 0; col < cols; col++) {
@@ -74,6 +76,8 @@ void Board::Init() {
 	pieceValueEval_ = std::make_unique<PieceValueEval>(maxRow_, maxCol_);
 	piecePlaceEval_ = std::make_unique<PiecePlaceEval>(maxRow_, maxCol_);
 	kingSafeEval_ = std::make_unique<KingSafeEval>();
+
+	kingsAddress_ = std::make_unique<KingsAddress>();
 }
 
 //=================================================================================================================
@@ -126,6 +130,20 @@ void Board::SetCurrentArray(const Vec2& address, const PlayerType& playerType, c
 	currentArray_[address.y][address.x] = currentAddress;
 }
 
+
+void Board::SetKingsAddress(const Vec2& player, const Vec2& cpu) {
+	kingsAddress_->Update(player, cpu);
+}
+
+bool Board::GetingPlayerKing(const Vec2& cpuMoveAddress) {
+
+	if (kingsAddress_->GetPlayerKingAddress().x == cpuMoveAddress.x && kingsAddress_->GetPlayerKingAddress().y == cpuMoveAddress.y) {
+		return true;
+	}
+
+	return false;
+}
+
 /// <summary>
 /// 今の盤面から動ける手をすべて生成する
 /// </summary>
@@ -162,10 +180,14 @@ std::vector<Moved> Board::CreateCanMove(const std::vector<std::vector<int>>& boa
 /// <param name="move"></param>
 /// <returns></returns>
 void Board::CreateMovedArray(const Moved& move) {
+	// 移動する前の番号を保存して置く
+	movePieceStack_.push(currentArray_[move.toMove.y][move.toMove.x]);
+
 	// from(今の場所)の情報をto(移動する場所)に代入する
 	currentArray_[move.toMove.y][move.toMove.x] = currentArray_[move.fromMove.y][move.fromMove.x];
-	// fromの場所には駒がなくなる
+	
 	currentArray_[move.fromMove.y][move.fromMove.x] = 0;
+	
 }
 
 /// <summary>
@@ -175,8 +197,10 @@ void Board::CreateMovedArray(const Moved& move) {
 void Board::CreateUndoMovedArray(const Moved& move) {
 	// toをfromに戻す
 	currentArray_[move.fromMove.y][move.fromMove.x] = currentArray_[move.toMove.y][move.toMove.x];
+
 	// toの場所には駒がなくなる
-	currentArray_[move.toMove.y][move.toMove.x] = 0;
+	currentArray_[move.toMove.y][move.toMove.x] = movePieceStack_.top();
+	movePieceStack_.pop();
 }
 
 /// <summary>
@@ -188,6 +212,10 @@ int Board::Evaluation() {
 	std::vector<PieceType> pieceTypes;
 	std::vector<PlayerType> playerTypes;
 
+	Vec2 cpuKingAddress; 
+
+	int kingSafeEval = 0;
+
 	// 結果の評価値
 	int eval = 0;
 
@@ -195,14 +223,6 @@ int Board::Evaluation() {
 	eval = pieceValueEval_->Eval();
 
 	/* --------------------- 駒の位置で評価 --------------------- */
-	for (const auto& entity : enemy_->GetPices()) {
-		eval += piecePlaceEval_->Eval(currentArray_, entity->GetAddress(), entity->GetPieceType());
-	}
-
-	for (const auto& entity : player_->GetPices()) {
-		eval -= piecePlaceEval_->WhiteEval(currentArray_, entity->GetAddress(), entity->GetPieceType());
-	}
-
 	// アドレスト駒の対応を保存
 	for (int row = 0; row < maxRow_; row++) {
 		for (int col = 0; col < maxCol_; col++) {
@@ -212,7 +232,7 @@ int Board::Evaluation() {
 
 				addresses.push_back({ col, row });
 				pieceTypes.push_back(static_cast<PieceType>(type));
-				playerTypes.push_back(static_cast<PlayerType>(playerType));
+				playerTypes.push_back(static_cast<PlayerType>(playerType - 1));
 			}
 		}
 	}
@@ -234,15 +254,24 @@ int Board::Evaluation() {
 	for (const auto& entity : player_->GetPices()) {
 		eval -= entity->PieceMobility(currentArray_);
 	}
-	
+
 	/* --------------------- キングの安全性で評価する --------------------- */
 	for (size_t oi = 0; oi < addresses.size(); oi++) {
 		if (playerTypes[oi] == kCPU) {
 			if (pieceTypes[oi] == KingType) {
-				kingSafeEval_->Eval(currentArray_, addresses[oi]);
+				kingSafeEval += kingSafeEval_->Eval(currentArray_, addresses[oi]);
+				cpuKingAddress = addresses[oi];
 			}
 		}
 	}
+
+	/* --------------------- キングを守れるかで評価 --------------------- */
+	// キングが攻撃されそうでキングの近くに行ける駒だったら評価値を上げる
+	if (kingSafeEval < 0) {
+		eval += kingSafeEval_->ProtectEval(addresses, playerTypes, cpuKingAddress);
+	}
+
+	eval += kingSafeEval;
 
 	return  eval;
 }

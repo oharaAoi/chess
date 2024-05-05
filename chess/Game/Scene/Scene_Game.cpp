@@ -55,6 +55,8 @@ void Scene_Game::Update(){
 	player_->BoardSetting();
 	enemy_->BoardSetting();
 
+	board_->SetKingsAddress(player_->GetKingAddress(), enemy_->GetKingAddress());
+
 	// playerが指したら入る
 	if (player_->GetIsPoint()) {
 		// まずplayerの駒と敵の駒の当たり判定を取る(当たっていたら敵の駒が取られる)
@@ -66,7 +68,8 @@ void Scene_Game::Update(){
 		// 敵の駒の生きている判定を取る
 		enemy_->CheckIsAlive();
 
-		// ボードの状態を更新
+		// 盤面の状態を更新する
+		player_->BoardSetting();
 		enemy_->BoardSetting();
 
 		// 敵が駒を指す

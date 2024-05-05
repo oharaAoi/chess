@@ -117,6 +117,10 @@ void Player::Update() {
 	for (int oi = 0; oi < pices_.size(); oi++) {
 		pices_[oi]->Update();
 
+		if (pices_[oi]->GetPieceType() == KingType) {
+			kingAddress_ = pices_[oi]->GetAddress();
+		}
+
 		// ピースのアップデート中に指されたらbreak
 		if (pices_[oi]->GetIsPoint()) {
 			isPoint_ = true;

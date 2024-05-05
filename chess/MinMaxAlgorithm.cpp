@@ -30,7 +30,6 @@ int MinMaxAlgorithm::AlphaBeta(int depth, int alpha, int beta, bool maximizingPl
 	// 最大値の場合は子のノードに対して比較を行い数値が大きいものを返す
 	if (maximizingPlayer) {
 		// 最大の評価値
-		int maxEval = INT_MIN;
 		// 現在の盤面から打てる手をすべて配列に格納する
 		std::vector<Moved> allCanMoved = board_->CreateCanMove(Board::GetCurrentArray(), kCPU);
 		// 打てる手が決まったらそれをすべてループ分に回す
@@ -43,21 +42,18 @@ int MinMaxAlgorithm::AlphaBeta(int depth, int alpha, int beta, bool maximizingPl
 			// 動きを適応させたボードを元に戻す
 			board_->CreateUndoMovedArray(moved);
 			// 評価値とmax値を比較する
-			maxEval = max(maxEval, eval);
 			// アルファ値と評価値を比較する
 			alpha = max(alpha, eval);
 			// アルファ値とベータ値を比較する
 			// β値を上回ったため先読みせず評価しない
 			if (beta <= alpha) {
-				break;
+				return alpha;
 			}
 		}
 
-		return maxEval;
+		return alpha;
 
 	} else {
-		// 最小の評価理 
-		int minEval = INT_MAX;
 		// 現在の盤面から打てる手をすべて配列に格納する
 		std::vector<Moved> allCanMoved = board_->CreateCanMove(Board::GetCurrentArray(), kPlayer);
 		for (const Moved& moved : allCanMoved) {
@@ -67,15 +63,14 @@ int MinMaxAlgorithm::AlphaBeta(int depth, int alpha, int beta, bool maximizingPl
 			int eval = AlphaBeta(depth - 1, alpha, beta, true);
 			// 動きを適応させたボードを元に戻す
 			board_->CreateUndoMovedArray(moved);
-			minEval = min(minEval, eval);
-			beta = min(beta, minEval);
+			beta = min(beta, eval);
 			// α値を下回ったため先読みせず評価を返す
 			if (beta <= alpha) {
-				break;
+				return beta;
 			}
 		}
 
-		return minEval;
+		return beta;
 	}
 }
 
@@ -85,19 +80,29 @@ Moved MinMaxAlgorithm::FindBestMove(int depth) {
 	int bestEval = INT_MIN;
 
 	roopCount_ = 0;
-	eval_ = 0;
+	
+	alpha_ = INT_MIN;
+	beta_ = INT_MAX;
 
 	// 動ける手を探す
 	std::vector<Moved> allCanMoved = board_->CreateCanMove(Board::GetCurrentArray(), kCPU);
 
 	// 今の盤面を保存しておく
-	Board::SetKeepArray();
+	//Board::SetKeepArray();
 
 	for (const Moved& moved : allCanMoved) {
+		// 相手のキングを取れるか
+		if (board_->GetingPlayerKing(moved.toMove)) {
+			return moved;
+		}
+
 		// 打てる手をボードに適応させる
 		board_->CreateMovedArray(moved);
-		int eval = AlphaBeta(depth - 1, INT_MIN, INT_MAX, false);
-		board_->SetCurrentArray(Board::GetKeepArray());
+
+		int eval = AlphaBeta(depth - 1, alpha_, beta_, false);
+		board_->CreateUndoMovedArray(moved);
+
+		alpha_ = eval;
 
 		if (bestEval < eval) {
 			bestEval = eval;

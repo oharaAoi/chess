@@ -20,6 +20,7 @@ enum PieceType {
 struct Moved {
 	Vec2 toMove;
 	Vec2 fromMove;
+	int32_t eval;
 };
 
 
@@ -95,6 +96,8 @@ protected:
 	bool isPreIdle_;
 
 	bool isPoint_;
+
+	bool isFirstMove_ = false;
 
 	PieceType pieceType_;
 

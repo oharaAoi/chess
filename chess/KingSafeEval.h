@@ -16,6 +16,8 @@ public:
 
 	int Eval(std::vector<std::vector<int>> boardArray, const Vec2& address);
 
+	int ProtectEval(const std::vector<Vec2>& address, std::vector<PlayerType> playerType, const Vec2& kingAddress);
+
 private:
 
 	std::vector<std::vector<int>> boardArray_;

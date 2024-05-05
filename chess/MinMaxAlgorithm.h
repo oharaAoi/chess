@@ -8,9 +8,9 @@
 #include <algorithm>
 
 struct EvalDate {
-	Vec2 moveToIndex;// どこのアドレスに移動するか
-	int evaluation; // 評価値
-	PieceType type;	// どの種類の駒を移動さるか
+	int32_t eval;
+	int32_t alpha;
+	int32_t beta;
 };
 
 /// <summary>
@@ -30,7 +30,6 @@ public:
 	/// <param name="maximizingPlayer"></param>
 	int AlphaBeta(int depth, int alpha, int beta, bool maximizingPlayer);
 
-
 	Moved FindBestMove(int depth);
 
 	void SetBoard(Board* board) { board_ = board; };
@@ -49,6 +48,9 @@ private:
 
 	// 出した評価値
 	int32_t eval_ = 0;
+
+	int32_t alpha_ = 0;
+	int32_t beta_ = 0;
 
 };
 

@@ -146,6 +146,7 @@ xcopy C:\KamataEngine\DirectXGame\Resources "$(OutDirFullPath)NoviceResources" /
     <ClCompile Include="Game\System\DrawUtils.cpp" />
     <ClCompile Include="Game\System\LoadFile.cpp" />
     <ClCompile Include="Game\System\MyNovice.cpp" />
+    <ClCompile Include="KingsAddress.cpp" />
     <ClCompile Include="KingSafeEval.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MinMaxAlgorithm.cpp" />
@@ -216,6 +217,7 @@ xcopy C:\KamataEngine\DirectXGame\Resources "$(OutDirFullPath)NoviceResources" /
     <ClInclude Include="Game\System\DrawUtils.h" />
     <ClInclude Include="Game\System\LoadFile.h" />
     <ClInclude Include="Game\System\MyNovice.h" />
+    <ClInclude Include="KingsAddress.h" />
     <ClInclude Include="KingSafeEval.h" />
     <ClInclude Include="MinMaxAlgorithm.h" />
     <ClInclude Include="PieceMobilityEval.h" />

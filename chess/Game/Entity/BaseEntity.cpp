@@ -14,6 +14,8 @@ void BaseEntity::MoveAI(const Moved& move) {
 	if (address_.x == move.fromMove.x && address_.y == move.fromMove.y) {
 		address_ = move.toMove;
 		pos_ = { address_.x * 64.0f - 32.0f, address_.y * 64.0f - 32.0f };
+
+		isFirstMove_ = false;
 	}
 }
 

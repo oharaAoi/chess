@@ -173,6 +173,9 @@
     <ClCompile Include="KingSafeEval.cpp">
       <Filter>KamataEngine</Filter>
     </ClCompile>
+    <ClCompile Include="KingsAddress.cpp">
+      <Filter>KamataEngine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\KamataEngine\DirectXGame\audio\Audio.h">
@@ -360,5 +363,6 @@
     </ClInclude>
     <ClInclude Include="PieceMobilityEval.h" />
     <ClInclude Include="KingSafeEval.h" />
+    <ClInclude Include="KingsAddress.h" />
   </ItemGroup>
 </Project>

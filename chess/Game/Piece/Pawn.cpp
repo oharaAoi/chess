@@ -33,6 +33,8 @@ void Pawn::Init(const Vec2& address, const PlayerType& type){
 	isPoint_ = false;
 	isAlive_ = true;
 
+	isFirstMove_ = true;
+
 	pieceType_ = PawnType;
 
 	if (type == kPlayer) {
@@ -83,6 +85,7 @@ void Pawn::Draw(){
 void Pawn::Move(const Vec2& moveToAddress) {
 	pos_ = { moveToAddress.x * 64.0f - 32.0f, moveToAddress.y * 64.0f - 32.0f };
 	address_ = moveToAddress;
+	isFirstMove_ = false;
 }
 
 void Pawn::MovedInit() {
@@ -100,9 +103,21 @@ void Pawn::MovePlaceInit() {
 	std::vector<std::vector<int>> nowArray = Board::GetCurrentArray();
 	// 上を確認
 	// 0(何もなかったら生成)
-	if (nowArray[address_.y + (1 * coefficient_)][address_.x] == 0) {
-		Vec2 address = { address_.x , address_.y + (1 * coefficient_) };
-		movePlaces_.push_back(std::make_unique<PieceMovePlace>(address));
+	if (!isFirstMove_) {
+		if (nowArray[address_.y + (1 * coefficient_)][address_.x] == 0) {
+			Vec2 address = { address_.x , address_.y + (1 * coefficient_) };
+			movePlaces_.push_back(std::make_unique<PieceMovePlace>(address));
+		}
+	} else {
+		if (nowArray[address_.y + (1 * coefficient_)][address_.x] == 0) {
+			Vec2 address = { address_.x , address_.y + (1 * coefficient_) };
+			movePlaces_.push_back(std::make_unique<PieceMovePlace>(address));
+		}
+
+		if (nowArray[address_.y + (2 * coefficient_)][address_.x] == 0) {
+			Vec2 address = { address_.x , address_.y + (2 * coefficient_) };
+			movePlaces_.push_back(std::make_unique<PieceMovePlace>(address));
+		}
 	}
 
 	// 右上と左上を確認して敵の駒があったら取れる
@@ -166,19 +181,31 @@ std::vector<Moved> Pawn::GetCanMove(const std::vector<std::vector<int>>& board) 
 	std::vector<std::vector<int>> nowArray = board;
 	// 上を確認
 	// 0(何もなかったら生成)
-	if (nowArray[address_.y + (1 * coefficient_)][address_.x] == 0) {
-		Vec2 address = { address_.x , address_.y + (1 * coefficient_) };
-		result.push_back({ address , address_ });
+	if (!isFirstMove_) {
+		if (nowArray[address_.y + (1 * coefficient_)][address_.x] == 0) {
+			Vec2 address = { address_.x , address_.y + (1 * coefficient_) };
+			result.push_back({ address , address_ });
+		}
+	} else {
+		if (nowArray[address_.y + (1 * coefficient_)][address_.x] == 0) {
+			Vec2 address = { address_.x , address_.y + (1 * coefficient_) };
+			result.push_back({ address , address_ });
+		}
+
+		if (nowArray[address_.y + (2 * coefficient_)][address_.x] == 0) {
+			Vec2 address = { address_.x , address_.y + (2 * coefficient_) };
+			result.push_back({ address , address_ });
+		}
 	}
 
 	// 右上を確認(敵がいたらtrue)
-	if (nowArray[address_.y + (1 * coefficient_)][address_.x + 1] / 10 == 1) {
+	if (nowArray[address_.y + (1 * coefficient_)][address_.x + 1] / 10 == static_cast<int>(checkType_ + 1)) {
 		Vec2 address = { address_.x + 1 , address_.y + (1 * coefficient_) };
 		result.push_back({ address , address_ });
 	}
 
 	// 左上を確認(敵がいたらtrue)
-	if (nowArray[address_.y + (1 * coefficient_)][address_.x - 1] / 10 == 1) {
+	if (nowArray[address_.y + (1 * coefficient_)][address_.x - 1] / 10 == static_cast<int>(checkType_ + 1)) {
 		Vec2 address = { address_.x - 1 , address_.y + (1 * coefficient_) };
 		result.push_back({ address , address_ });
 	}
@@ -187,52 +214,69 @@ std::vector<Moved> Pawn::GetCanMove(const std::vector<std::vector<int>>& board) 
 }
 
 int Pawn::PieceMobility(const std::vector<std::vector<int>>& board) {
+	int result = 0;
 	int moveCount = 0;
+	int gettenCount = 0;
+
 	std::vector<std::vector<int>> nowArray = board;
 
 	// 上を確認
 	// 0(何もなかったら生成)
-	if (nowArray[address_.y + (1 * coefficient_)][address_.x] == 0) {
-		Vec2 address = { address_.x , address_.y + (1 * coefficient_) };
-		moveCount++;
+	if (!isFirstMove_) {
+		if (nowArray[address_.y + (1 * coefficient_)][address_.x] == 0) {
+			Vec2 address = { address_.x , address_.y + (1 * coefficient_) };
+			moveCount++;
+		}
+	} else {
+		if (nowArray[address_.y + (1 * coefficient_)][address_.x] == 0) {
+			Vec2 address = { address_.x , address_.y + (1 * coefficient_) };
+			moveCount++;
+		}
+
+		if (nowArray[address_.y + (2 * coefficient_)][address_.x] == 0) {
+			Vec2 address = { address_.x , address_.y + (2 * coefficient_) };
+			moveCount++;
+		}
 	}
 
 	// 右上を確認(敵がいたらtrue)
-	if (nowArray[address_.y + (1 * coefficient_)][address_.x + 1] / 10 == 1) {
+	if (nowArray[address_.y + (1 * coefficient_)][address_.x + 1] / 10 == static_cast<int>(checkType_ + 1)) {
 		Vec2 address = { address_.x + 1 , address_.y + (1 * coefficient_) };
 		moveCount++;
-		moveCount += PieceGetting(static_cast<PieceType>(nowArray[address_.y + (1 * coefficient_)][address_.x + 1] % 10));
+		gettenCount += PieceGetting(static_cast<PieceType>(nowArray[address_.y + (1 * coefficient_)][address_.x + 1] % 10));
 	}
 
 	// 左上を確認(敵がいたらtrue)
-	if (nowArray[address_.y + (1 * coefficient_)][address_.x - 1] / 10 == 1) {
+	if (nowArray[address_.y + (1 * coefficient_)][address_.x - 1] / 10 == static_cast<int>(checkType_ + 1)) {
 		Vec2 address = { address_.x - 1 , address_.y + (1 * coefficient_) };
 		moveCount++;
-		moveCount += PieceGetting(static_cast<PieceType>(nowArray[address_.y + (1 * coefficient_)][address_.x + 1] % 10));
+		gettenCount += PieceGetting(static_cast<PieceType>(nowArray[address_.y + (1 * coefficient_)][address_.x + 1] % 10));
 	}
 
-	return moveCount;
+	result = moveCount + gettenCount;
+
+	return result;
 }
 
 int Pawn::PieceGetting(const PieceType& type) {
 	switch (type) {
 	case PawnType:
-		return 10;
+		return 100;
 
 	case KnightType:
-		return 40;
+		return 400;
 
 	case BishopType:
-		return 40;
+		return 400;
 
 	case RookType:
-		return 60;
+		return 600;
 
 	case QueenType:
 		return 100;
 
 	case KingType:
-		return 1000;
+		return 100000;
 	}
 
 	return 0;

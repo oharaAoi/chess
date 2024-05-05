@@ -71,6 +71,10 @@ void Enemy::Update() {
 	// 駒のupdate
 	for (int oi = 0; oi < pices_.size(); oi++) {
 		pices_[oi]->Update();
+
+		if (pices_[oi]->GetPieceType() == KingType) {
+			kingAddress_ = pices_[oi]->GetAddress();
+		}
 	}
 }
 

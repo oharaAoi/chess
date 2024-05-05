@@ -47,6 +47,8 @@ public:
 
 	bool GetIsLose() const { return isLose_; }
 
+	Vec2 GetKingAddress() const { return kingAddress_; }
+
 private:
 
 	/*std::vector<std::unique_ptr<Pawn>> pawn_;
@@ -63,6 +65,10 @@ private:
 
 	// キングが取られたか
 	bool isLose_;
+
+	std::vector<PieceType> exsitType_;
+
+	Vec2 kingAddress_ = {0,0};
 };
 
 

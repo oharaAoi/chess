@@ -48,6 +48,8 @@ public:
 
 	bool GetIsLose() const { return isLose_; }
 
+	Vec2 GetKingAddress() const { return kingAddress_; }
+
 private:
 
 	std::vector<std::unique_ptr<BaseEntity>> pices_;
@@ -57,5 +59,6 @@ private:
 	// キングが取られたか
 	bool isLose_;
 
+	Vec2 kingAddress_ = { 0,0 };
 };
 

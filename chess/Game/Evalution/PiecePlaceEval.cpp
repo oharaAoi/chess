@@ -40,7 +40,6 @@ int PiecePlaceEval::Eval(std::vector<std::vector<int>> boardArray, const Vec2& a
 	int result;
 
 	boardArray_ = boardArray;
-	keepArray_ = Board::GetKeepArray();
 
 	for (int row = 0; row < maxRow_; row++) {
 		for (int col = 0; col < maxCol_; col++) {
@@ -48,38 +47,27 @@ int PiecePlaceEval::Eval(std::vector<std::vector<int>> boardArray, const Vec2& a
 				switch (type) {
 				case PawnType:
 					result = ePownSquareTable_[row][col];
-					result += CheckAddressOnWhitePiece(address);
 					return result;
-					break;
 
 				case KnightType:
 					result = eKnightSquareTable_[row][col];
-					result += CheckAddressOnWhitePiece(address);
 					return result;
-					break;
 
 				case BishopType:
 					result = eBishopSquareTable_[row][col];
-					result += CheckAddressOnWhitePiece(address);
 					return result;
-					break;
 
 				case RookType:
 					result = eRookSquareTable_[row][col];
-					result += CheckAddressOnWhitePiece(address);
 					return result;
-					break;
 
 				case QueenType:
 					result = eQueenSquareTable_[row][col];
-					result += CheckAddressOnWhitePiece(address);
 					return result;
-					break;
 
 				case KingType:
 					result = eKingSquareTable_[row][col];
 					return result;
-					break;
 				}
 			}
 		}
@@ -92,47 +80,34 @@ int PiecePlaceEval::WhiteEval(std::vector<std::vector<int>> boardArray, const Ve
 	int result;
 
 	boardArray_ = boardArray;
-	keepArray_ = Board::GetKeepArray();
 
 	for (int row = 0; row < maxRow_; row++) {
 		for (int col = 0; col < maxCol_; col++) {
 			if (address.x == col && address.y == row) {
 				switch (type) {
 				case PawnType:
-					result = pPownSquareTable_[row][col];
-					result += CheckAddressOnBlackPiece(address);
+					result = pPownSquareTable_[row][col];					
 					return result;
-					break;
 
 				case KnightType:
 					result = pKnightSquareTable_[row][col];
-					result += CheckAddressOnBlackPiece(address);
 					return result;
-					break;
 
 				case BishopType:
 					result = pBishopSquareTable_[row][col];
-					result += CheckAddressOnBlackPiece(address);
 					return result;
-					break;
 
 				case RookType:
 					result = pRookSquareTable_[row][col];
-					result += CheckAddressOnBlackPiece(address);
 					return result;
-					break;
 
 				case QueenType:
 					result = pQueenSquareTable_[row][col];
-					result += CheckAddressOnBlackPiece(address);
 					return result;
-					break;
 
 				case KingType:
 					result = pKingSquareTable_[row][col];
-					result += CheckAddressOnBlackPiece(address);
 					return result;
-					break;
 				}
 			}
 		}
