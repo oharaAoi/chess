@@ -119,6 +119,9 @@ xcopy C:\KamataEngine\DirectXGame\Resources "$(OutDirFullPath)NoviceResources" /
     <ClCompile Include="Game\Entity\Enemy.cpp" />
     <ClCompile Include="Game\Entity\PieceMovePlace.cpp" />
     <ClCompile Include="Game\Entity\Player.cpp" />
+    <ClCompile Include="Game\Evalution\KingSafeEval.cpp" />
+    <ClCompile Include="Game\Evalution\MinMaxAlgorithm.cpp" />
+    <ClCompile Include="Game\Evalution\PieceMobilityEval.cpp" />
     <ClCompile Include="Game\Evalution\PiecePlaceEval.cpp" />
     <ClCompile Include="Game\Evalution\PieceValueEval.cpp" />
     <ClCompile Include="Game\Lib\Draw.cpp" />
@@ -147,10 +150,7 @@ xcopy C:\KamataEngine\DirectXGame\Resources "$(OutDirFullPath)NoviceResources" /
     <ClCompile Include="Game\System\LoadFile.cpp" />
     <ClCompile Include="Game\System\MyNovice.cpp" />
     <ClCompile Include="KingsAddress.cpp" />
-    <ClCompile Include="KingSafeEval.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MinMaxAlgorithm.cpp" />
-    <ClCompile Include="PieceMobilityEval.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\KamataEngine\DirectXGame\base\StringUtility.h" />
@@ -184,6 +184,9 @@ xcopy C:\KamataEngine\DirectXGame\Resources "$(OutDirFullPath)NoviceResources" /
     <ClInclude Include="Game\Entity\Enemy.h" />
     <ClInclude Include="Game\Entity\PieceMovePlace.h" />
     <ClInclude Include="Game\Entity\Player.h" />
+    <ClInclude Include="Game\Evalution\KingSafeEval.h" />
+    <ClInclude Include="Game\Evalution\MinMaxAlgorithm.h" />
+    <ClInclude Include="Game\Evalution\PieceMobilityEval.h" />
     <ClInclude Include="Game\Evalution\PiecePlaceEval.h" />
     <ClInclude Include="Game\Evalution\PieceValueEval.h" />
     <ClInclude Include="Game\Lib\AddressStruct.h" />
@@ -218,9 +221,6 @@ xcopy C:\KamataEngine\DirectXGame\Resources "$(OutDirFullPath)NoviceResources" /
     <ClInclude Include="Game\System\LoadFile.h" />
     <ClInclude Include="Game\System\MyNovice.h" />
     <ClInclude Include="KingsAddress.h" />
-    <ClInclude Include="KingSafeEval.h" />
-    <ClInclude Include="MinMaxAlgorithm.h" />
-    <ClInclude Include="PieceMobilityEval.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
