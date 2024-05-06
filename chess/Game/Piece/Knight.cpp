@@ -229,6 +229,11 @@ int Knight::PieceMobility(const std::vector<std::vector<int>>& board) {
 			} else if (board[checkAddress.y][checkAddress.x] / 10 == static_cast<int>(checkType_ + 1)) {
 				moveCount++;
 				gettenCount += PieceGetting(static_cast<PieceType>(board[checkAddress.y][checkAddress.x] % 10));
+
+				// キングを守れるかどうか
+				if (Board::GetKingAttackAddress().x == checkAddress.x && Board::GetKingAttackAddress().y == checkAddress.y) {
+					gettenCount += 200000;
+				}
 			}
 		}
 	}
@@ -250,13 +255,13 @@ int Knight::PieceGetting(const PieceType& type) {
 		return 400;
 
 	case RookType:
-		return 600;
+		return 500;
 
 	case QueenType:
-		return 100;
+		return 800;
 
 	case KingType:
-		return 100000;
+		return 1000000;
 	}
 
 	return 0;

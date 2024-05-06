@@ -155,9 +155,6 @@
     <ClCompile Include="Game\Entity\Enemy.cpp">
       <Filter>Game\Entity</Filter>
     </ClCompile>
-    <ClCompile Include="MinMaxAlgorithm.cpp">
-      <Filter>KamataEngine</Filter>
-    </ClCompile>
     <ClCompile Include="Game\Manager\CollisionManager.cpp">
       <Filter>Game\Manager</Filter>
     </ClCompile>
@@ -167,14 +164,17 @@
     <ClCompile Include="Game\Evalution\PieceValueEval.cpp">
       <Filter>Game\Evalution</Filter>
     </ClCompile>
-    <ClCompile Include="PieceMobilityEval.cpp">
-      <Filter>KamataEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="KingSafeEval.cpp">
-      <Filter>KamataEngine</Filter>
-    </ClCompile>
     <ClCompile Include="KingsAddress.cpp">
       <Filter>KamataEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Evalution\KingSafeEval.cpp">
+      <Filter>Game\Evalution</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Evalution\MinMaxAlgorithm.cpp">
+      <Filter>Game\Evalution</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Evalution\PieceMobilityEval.cpp">
+      <Filter>Game\Evalution</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -351,7 +351,6 @@
     <ClInclude Include="Game\Entity\Enemy.h">
       <Filter>Game\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="MinMaxAlgorithm.h" />
     <ClInclude Include="Game\Manager\CollisionManager.h">
       <Filter>Game\Manager</Filter>
     </ClInclude>
@@ -361,8 +360,15 @@
     <ClInclude Include="Game\Evalution\PieceValueEval.h">
       <Filter>Game\Evalution</Filter>
     </ClInclude>
-    <ClInclude Include="PieceMobilityEval.h" />
-    <ClInclude Include="KingSafeEval.h" />
     <ClInclude Include="KingsAddress.h" />
+    <ClInclude Include="Game\Evalution\KingSafeEval.h">
+      <Filter>Game\Evalution</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Evalution\MinMaxAlgorithm.h">
+      <Filter>Game\Evalution</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Evalution\PieceMobilityEval.h">
+      <Filter>Game\Evalution</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

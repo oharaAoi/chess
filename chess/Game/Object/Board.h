@@ -38,6 +38,9 @@ public:
 	static std::vector<std::vector<int>> GetKeepArray() { return keepArray_; }
 	static void SetKeepArray() { keepArray_ = currentArray_; }
 
+	static Vec2 GetKingAttackAddress() { return kingAttackAddress_; }
+	static void SetKingAttackAddress(const Vec2& address) { kingAttackAddress_ = address; }
+
 	/// <summary>
 	/// エネミーのインスタンスをセット
 	/// </summary>
@@ -90,6 +93,9 @@ private:
 
 	static std::vector<std::vector<int>> currentArray_;
 	static std::vector<std::vector<int>> keepArray_;
+
+	// キングを攻撃できる配列を保存する(配列にしないのはCPU側しか評価しないのと2つあったらほぼ詰みだから)
+	static Vec2 kingAttackAddress_;
 
 	int maxRow_;
 	int maxCol_;

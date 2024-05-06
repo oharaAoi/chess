@@ -244,6 +244,11 @@ int Pawn::PieceMobility(const std::vector<std::vector<int>>& board) {
 		Vec2 address = { address_.x + 1 , address_.y + (1 * coefficient_) };
 		moveCount++;
 		gettenCount += PieceGetting(static_cast<PieceType>(nowArray[address_.y + (1 * coefficient_)][address_.x + 1] % 10));
+
+		// キングを守れるかどうか
+		if (Board::GetKingAttackAddress().x == address.x && Board::GetKingAttackAddress().y == address.y) {
+			gettenCount += 200000;
+		}
 	}
 
 	// 左上を確認(敵がいたらtrue)
@@ -251,6 +256,10 @@ int Pawn::PieceMobility(const std::vector<std::vector<int>>& board) {
 		Vec2 address = { address_.x - 1 , address_.y + (1 * coefficient_) };
 		moveCount++;
 		gettenCount += PieceGetting(static_cast<PieceType>(nowArray[address_.y + (1 * coefficient_)][address_.x + 1] % 10));
+		// キングを守れるかどうか
+		if (Board::GetKingAttackAddress().x == address.x && Board::GetKingAttackAddress().y ==address.y) {
+			gettenCount += 200000;
+		}
 	}
 
 	result = moveCount + gettenCount;
@@ -270,13 +279,13 @@ int Pawn::PieceGetting(const PieceType& type) {
 		return 400;
 
 	case RookType:
-		return 600;
+		return 500;
 
 	case QueenType:
-		return 100;
+		return 800;
 
 	case KingType:
-		return 100000;
+		return 1000000;
 	}
 
 	return 0;

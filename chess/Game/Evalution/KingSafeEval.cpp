@@ -33,7 +33,7 @@ int KingSafeEval::Eval(std::vector<std::vector<int>> boardArray, const Vec2& add
 		// 超えていなかったら
 		if (!isOver) {
 			if (boardArray_[checkAddress.y][checkAddress.x] / 10 == (kPlayer + 1)) {
-				result+= -1000;
+				result+= -1000000000;
 			}
 		}
 	}
@@ -41,7 +41,7 @@ int KingSafeEval::Eval(std::vector<std::vector<int>> boardArray, const Vec2& add
 	return result;
 }
 
-int KingSafeEval::ProtectEval(const std::vector<Vec2>& address, std::vector<PlayerType> playerType, const Vec2& kingAddress) {
+int KingSafeEval::ProtectEval(const std::vector<Vec2>& address, const std::vector<PlayerType>& playerType, const Vec2& kingAddress) {
 	int result = 0;
 
 	// キングの周りに移動する局面だったら
@@ -51,7 +51,7 @@ int KingSafeEval::ProtectEval(const std::vector<Vec2>& address, std::vector<Play
 			
 			if (playerType[oi] == kCPU) {
 				if (addresses.x == address[oi].x && addresses.y == address[oi].y) {
-					result += 100000000;
+					result += 1000000;
 				}
 			}
 		}
@@ -59,3 +59,15 @@ int KingSafeEval::ProtectEval(const std::vector<Vec2>& address, std::vector<Play
 
 	return result;
 }
+
+//int KingSafeEval::ProtectToAttackPieceEval(const std::vector<Vec2>& address, const std::vector<PlayerType>& playerType, const std::vector<Vec2>& attackAddress) {
+//	int result = 0;
+//
+//	for (size_t oi = 0; oi < address.size(); oi++) {
+//		if (playerType[oi] == kCPU) {
+//
+//		}
+//	}
+//
+//	return 0;
+//}

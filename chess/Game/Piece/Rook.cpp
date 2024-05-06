@@ -288,12 +288,19 @@ int Rook::PieceMobility(const std::vector<std::vector<int>>& board) {
 	for (int row = address_.y + 1; row < maxLine; row++) {
 		// 0だったら生成
 		if (board[row][address_.x] == 0) {
+
 			Vec2 address = { address_.x , row };
 			moveCount++;
 		} else if (board[row][address_.x] / 10 == static_cast<int>(checkType_ + 1)) {
 			Vec2 address = { address_.x , row };
 			moveCount++;
 			gettenCount += PieceGetting(static_cast<PieceType>(board[address.y][address.x] % 10));
+
+			// キングを守れるかどうか
+			if (Board::GetKingAttackAddress().x == address.x && Board::GetKingAttackAddress().y == address.y) {
+				gettenCount += 200000;
+			}
+
 			break;
 		} else {
 			// 0以外があったらループを出る
@@ -311,6 +318,12 @@ int Rook::PieceMobility(const std::vector<std::vector<int>>& board) {
 			Vec2 address = { address_.x , row };
 			moveCount++;
 			gettenCount += PieceGetting(static_cast<PieceType>(board[address.y][address.x] % 10));
+
+			// キングを守れるかどうか
+			if (Board::GetKingAttackAddress().x == address.x && Board::GetKingAttackAddress().y == address.y) {
+				gettenCount += 200000;
+			}
+
 			break;
 		} else {
 			// 0以外があったらループを出る
@@ -328,6 +341,12 @@ int Rook::PieceMobility(const std::vector<std::vector<int>>& board) {
 			Vec2 address = { col, address_.y };
 			moveCount++;
 			gettenCount += PieceGetting(static_cast<PieceType>(board[address.y][address.x] % 10));
+
+			// キングを守れるかどうか
+			if (Board::GetKingAttackAddress().x == address.x && Board::GetKingAttackAddress().y == address.y) {
+				gettenCount += 200000;
+			}
+
 			break;
 		} else {
 			// 0以外があったらループを出る
@@ -345,6 +364,12 @@ int Rook::PieceMobility(const std::vector<std::vector<int>>& board) {
 			Vec2 address = { col, address_.y };
 			moveCount++;
 			gettenCount += PieceGetting(static_cast<PieceType>(board[address.y][address.x] % 10));
+
+			// キングを守れるかどうか
+			if (Board::GetKingAttackAddress().x == address.x && Board::GetKingAttackAddress().y == address.y) {
+				gettenCount += 200000;
+			}
+
 			break;
 		} else {
 			// 0以外があったらループを出る
@@ -369,13 +394,13 @@ int Rook::PieceGetting(const PieceType& type) {
 		return 400;
 
 	case RookType:
-		return 600;
+		return 500;
 
 	case QueenType:
-		return 100;
+		return 800;
 
 	case KingType:
-		return 100000;
+		return 1000000;
 	}
 
 	return 0;

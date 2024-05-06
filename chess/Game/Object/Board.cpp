@@ -7,6 +7,8 @@
 std::vector<std::vector<int>> Board::currentArray_{};
 std::vector<std::vector<int>> Board::keepArray_{};
 
+Vec2 Board::kingAttackAddress_{};
+
 Board::Board() {
 	Init();
 }
@@ -208,14 +210,17 @@ void Board::CreateUndoMovedArray(const Moved& move) {
 /// </summary>
 /// <returns></returns>
 int Board::Evaluation() {
+	// アドレスやタイプなどを保存する配列
 	std::vector<Vec2> addresses;
 	std::vector<PieceType> pieceTypes;
 	std::vector<PlayerType> playerTypes;
-
+	// kingへ攻撃できる駒のアドレスを保存する配列
+	std::vector<Vec2> canKingAttackAddress;
+	kingAttackAddress_ = { 0,0 };
+	// cpuのキングのアドレス
 	Vec2 cpuKingAddress; 
-
+	// キングの安全度の評評価値
 	int kingSafeEval = 0;
-
 	// 結果の評価値
 	int eval = 0;
 
@@ -247,12 +252,18 @@ int Board::Evaluation() {
 	}
 
 	/* --------------------- 駒の可動性で評価をする --------------------- */
-	for (const auto& entity : enemy_->GetPices()) {
-		eval += entity->PieceMobility(currentArray_);
+	for (const auto& entity : player_->GetPices()) {
+		int mobilityEval = entity->PieceMobility(currentArray_);
+		eval -= mobilityEval;
+
+		// 評価値からキングに攻撃できるアドレスを取得
+		if (mobilityEval >= 100000) {
+			kingAttackAddress_ = entity->GetAddress();
+		}
 	}
 
-	for (const auto& entity : player_->GetPices()) {
-		eval -= entity->PieceMobility(currentArray_);
+	for (const auto& entity : enemy_->GetPices()) {
+		eval += entity->PieceMobility(currentArray_);
 	}
 
 	/* --------------------- キングの安全性で評価する --------------------- */

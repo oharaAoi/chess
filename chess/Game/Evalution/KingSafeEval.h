@@ -16,7 +16,23 @@ public:
 
 	int Eval(std::vector<std::vector<int>> boardArray, const Vec2& address);
 
-	int ProtectEval(const std::vector<Vec2>& address, std::vector<PlayerType> playerType, const Vec2& kingAddress);
+	/// <summary>
+	/// キングの周りに来れる駒があるかを評価
+	/// </summary>
+	/// <param name="address">盤面のアドレス</param>
+	/// <param name="playerType">アドレスの操作タイプ</param>
+	/// <param name="kingAddress">キングのアドレス</param>
+	/// <returns></returns>
+	int ProtectEval(const std::vector<Vec2>& address, const std::vector<PlayerType>& playerType, const Vec2& kingAddress);
+
+	/// <summary>
+	/// 攻撃する駒を取ることができるかの評価
+	/// </summary>
+	/// <param name="address">盤面のアドレス</param>
+	/// <param name="playerType">アドレスの操作タイプ</param>
+	/// <param name="attackAddress">攻撃する駒のアドレス</param>
+	/// <returns></returns>
+	//int ProtectToAttackPieceEval(const std::vector<Vec2>& address, const std::vector<PlayerType>& playerType, const std::vector<Vec2>& attackAddress);
 
 private:
 
