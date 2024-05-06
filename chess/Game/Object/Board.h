@@ -107,6 +107,8 @@ private:
 
 	bool isGameSet_;
 
+	int eval_;
+
 	// 評価するクラス
 	std::unique_ptr<PieceValueEval> pieceValueEval_;
 	std::unique_ptr<PiecePlaceEval> piecePlaceEval_;
@@ -115,5 +117,7 @@ private:
 	std::unique_ptr<KingsAddress> kingsAddress_;
 
 	std::stack<int> movePieceStack_;
+
+	std::stack<BaseEntity*> entityPtrStack_;
 };
 

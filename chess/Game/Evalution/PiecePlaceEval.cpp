@@ -86,7 +86,7 @@ int PiecePlaceEval::WhiteEval(std::vector<std::vector<int>> boardArray, const Ve
 			if (address.x == col && address.y == row) {
 				switch (type) {
 				case PawnType:
-					result = pPownSquareTable_[row][col];					
+					result = pPownSquareTable_[row][col];
 					return result;
 
 				case KnightType:
@@ -126,8 +126,7 @@ int PiecePlaceEval::CheckAddressOnWhitePiece(const Vec2& address) {
 		switch (keepArray_[address.y][address.x] % 10) {
 		case PawnType:
 			return takePieceValue_[PawnType];
-			break;
-
+		
 		case KnightType:
 			return takePieceValue_[KnightType];
 			break;
@@ -154,23 +153,19 @@ int PiecePlaceEval::CheckAddressOnBlackPiece(const Vec2& address) {
 		switch (keepArray_[address.y][address.x] % 10) {
 		case PawnType:
 			return takePieceValue_[PawnType];
-			break;
-
+			
 		case KnightType:
 			return takePieceValue_[KnightType];
-			break;
-
+			
 		case BishopType:
 			return takePieceValue_[BishopType];
-			break;
-
+			
 		case RookType:
 			return takePieceValue_[RookType];
-			break;
-
+			
 		case QueenType:
 			return takePieceValue_[QueenType];
-			break;
+			
 		}
 	}
 

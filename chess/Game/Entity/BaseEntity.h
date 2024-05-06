@@ -23,6 +23,12 @@ struct Moved {
 	int32_t eval;
 };
 
+enum IsCheckMate {
+	cannt,
+	isPlayer,
+	isCPU
+};
+
 
 class BaseEntity{
 public:
@@ -45,6 +51,8 @@ public:
 
 	virtual bool GetIsAlive() const { return isAlive_; }
 	virtual void SetIsAlive(const bool& isAlive) { isAlive_ = isAlive; }
+
+	virtual IsCheckMate GetIsCheck() const { return isCheck_; }
 
 public:
 
@@ -106,6 +114,8 @@ protected:
 
 	// プラスかマイナスの係数
 	int coefficient_;
+
+	IsCheckMate isCheck_;
 };
 
 

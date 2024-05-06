@@ -6,6 +6,8 @@
 
 #include <limits>
 #include <algorithm>
+#include <functional>
+#include <cassert>
 
 struct EvalDate {
 	int32_t eval;

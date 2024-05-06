@@ -1,6 +1,8 @@
 ﻿#include "KingSafeEval.h"
 
-KingSafeEval::KingSafeEval() {
+KingSafeEval::KingSafeEval(const int& maxRow, const int& maxCol) {
+	maxRow_ = maxRow;
+	maxCol_ = maxCol;
 }
 
 KingSafeEval::~KingSafeEval() {
@@ -9,53 +11,77 @@ KingSafeEval::~KingSafeEval() {
 void KingSafeEval::Init() {
 }
 
-int KingSafeEval::Eval(std::vector<std::vector<int>> boardArray, const Vec2& address) {
+int KingSafeEval::Eval(std::vector<std::vector<int>> boardArray) {
 	int result = 0;
-	boardArray_ = boardArray;
-	int maxLine = static_cast<int>(boardArray_.size()) - 1;
+	kingAttackAddress_.clear();
+
+	for (int row = 0; row < maxRow_; row++) {
+		for (int col = 0; col < maxCol_; col++) {
+			if (boardArray[row][col] / 10 == static_cast<int>(2)) {
+				if (boardArray[row][col] % 10 == KingType) {
+					kingAddress_ = { col, row };
+				}
+			}
+		}
+	}
 
 	for (int oi = 0; oi < 8; oi++) {
-		Vec2 checkAddress = address;
+		Vec2 checkAddress = kingAddress_;
 		checkAddress.x += movedX_[oi];
 		checkAddress.y += movedY_[oi];
 
 		bool isOver = false;
 
 		// 値が範囲を超えているかをまず調べる
-		if (checkAddress.x <= 0 || checkAddress.x >= maxLine) {
+		if (checkAddress.x <= 0 || checkAddress.x >= maxRow_) {
 			isOver = true;
 		}
 
-		if (checkAddress.y <= 0 || checkAddress.y >= maxLine) {
+		if (checkAddress.y <= 0 || checkAddress.y >= maxRow_) {
 			isOver = true;
 		}
 
 		// 超えていなかったら
 		if (!isOver) {
-			if (boardArray_[checkAddress.y][checkAddress.x] / 10 == (kPlayer + 1)) {
-				result+= -1000000000;
-			}
+			if (boardArray[checkAddress.y][checkAddress.x] / 10 == (kPlayer + 1)) {
+				result += -10000;
+				kingAttackAddress_.push_back(checkAddress);
+			} 
 		}
 	}
 
 	return result;
 }
 
-int KingSafeEval::ProtectEval(const std::vector<Vec2>& address, const std::vector<PlayerType>& playerType, const Vec2& kingAddress) {
+int KingSafeEval::ProtectEval(std::vector<std::vector<int>> boardArray) {
 	int result = 0;
+	
+	for (int oi = 0; oi < 8; oi++) {
+		Vec2 checkAddress = kingAddress_;
+		checkAddress.x += movedX_[oi];
+		checkAddress.y += movedY_[oi];
 
-	// キングの周りに移動する局面だったら
-	for (size_t oi = 0; oi < address.size(); oi++) {
-		for (int index = 0; index < 8; index++) {
-			Vec2 addresses = { kingAddress.x + movedX_[index], kingAddress.y + movedY_[index] };
-			
-			if (playerType[oi] == kCPU) {
-				if (addresses.x == address[oi].x && addresses.y == address[oi].y) {
-					result += 1000000;
+		bool isOver = false;
+
+		// 値が範囲を超えているかをまず調べる
+		if (checkAddress.x <= 0 || checkAddress.x >= maxRow_) {
+			isOver = true;
+		}
+
+		if (checkAddress.y <= 0 || checkAddress.y >= maxRow_) {
+			isOver = true;
+		}
+
+		// 超えていなかったら
+		if (!isOver) {
+			for (int index = 0; index < kingAttackAddress_.size(); index++) {
+				if (kingAttackAddress_[index].x == checkAddress.x && kingAttackAddress_[index].y == checkAddress.y) {
+					result += 10000;
 				}
 			}
 		}
 	}
+
 
 	return result;
 }

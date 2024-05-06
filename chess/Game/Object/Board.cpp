@@ -20,8 +20,10 @@ Board::~Board() {
 //	↓　初期化
 //=================================================================================================================
 void Board::Init() {
-	LoadFile::LoadMapData("./Resources/json/board.json");
 
+	block_.clear();
+
+	LoadFile::LoadMapData("./Resources/json/board.json");
 
 	std::vector<std::vector<int>> mapArry;
 	mapArry = LoadFile::GetMapArr();
@@ -74,10 +76,12 @@ void Board::Init() {
 		}
 	}
 
+	eval_ = 0;
+
 	// 評価をするクラス
 	pieceValueEval_ = std::make_unique<PieceValueEval>(maxRow_, maxCol_);
 	piecePlaceEval_ = std::make_unique<PiecePlaceEval>(maxRow_, maxCol_);
-	kingSafeEval_ = std::make_unique<KingSafeEval>();
+	kingSafeEval_ = std::make_unique<KingSafeEval>(maxRow_, maxCol_);
 
 	kingsAddress_ = std::make_unique<KingsAddress>();
 }
@@ -185,6 +189,25 @@ void Board::CreateMovedArray(const Moved& move) {
 	// 移動する前の番号を保存して置く
 	movePieceStack_.push(currentArray_[move.toMove.y][move.toMove.x]);
 
+	if (currentArray_[move.toMove.y][move.toMove.x] != 0) {
+		if (currentArray_[move.toMove.y][move.toMove.x] / 10 == kPlayer + 1) {
+			for (const auto& entity : player_->GetPices()) {
+				if (entity->GetAddress().x == move.toMove.x && entity->GetAddress().y == move.toMove.y) {
+					entity->SetIsAlive(false);
+					entityPtrStack_.push(entity.get());
+
+				} 
+			}
+		} else {
+			for (const auto& entity : enemy_->GetPices()) {
+				if (entity->GetAddress().x == move.toMove.x && entity->GetAddress().y == move.toMove.y) {
+					entity->SetIsAlive(false);
+					entityPtrStack_.push(entity.get());
+				}
+			}
+		}
+	}
+
 	// from(今の場所)の情報をto(移動する場所)に代入する
 	currentArray_[move.toMove.y][move.toMove.x] = currentArray_[move.fromMove.y][move.fromMove.x];
 	
@@ -203,6 +226,11 @@ void Board::CreateUndoMovedArray(const Moved& move) {
 	// toの場所には駒がなくなる
 	currentArray_[move.toMove.y][move.toMove.x] = movePieceStack_.top();
 	movePieceStack_.pop();
+
+	if (!entityPtrStack_.empty()) {
+		entityPtrStack_.top()->SetIsAlive(true);
+		entityPtrStack_.pop();
+	}
 }
 
 /// <summary>
@@ -210,17 +238,9 @@ void Board::CreateUndoMovedArray(const Moved& move) {
 /// </summary>
 /// <returns></returns>
 int Board::Evaluation() {
-	// アドレスやタイプなどを保存する配列
-	std::vector<Vec2> addresses;
-	std::vector<PieceType> pieceTypes;
-	std::vector<PlayerType> playerTypes;
 	// kingへ攻撃できる駒のアドレスを保存する配列
 	std::vector<Vec2> canKingAttackAddress;
 	kingAttackAddress_ = { 0,0 };
-	// cpuのキングのアドレス
-	Vec2 cpuKingAddress; 
-	// キングの安全度の評評価値
-	int kingSafeEval = 0;
 	// 結果の評価値
 	int eval = 0;
 
@@ -229,60 +249,45 @@ int Board::Evaluation() {
 
 	/* --------------------- 駒の位置で評価 --------------------- */
 	// アドレスト駒の対応を保存
-	for (int row = 0; row < maxRow_; row++) {
-		for (int col = 0; col < maxCol_; col++) {
-			if (currentArray_[row][col] != 0) {
-				int type = currentArray_[row][col] % 10;
-				int playerType = currentArray_[row][col] / 10;
-
-				addresses.push_back({ col, row });
-				pieceTypes.push_back(static_cast<PieceType>(type));
-				playerTypes.push_back(static_cast<PlayerType>(playerType - 1));
-			}
-		}
-	}
-
-	// 駒の位置で評価をする
-	for (size_t oi = 0; oi < addresses.size(); oi++) {
-		if (playerTypes[oi] == kPlayer) {
-			eval -= piecePlaceEval_->WhiteEval(currentArray_, addresses[oi], pieceTypes[oi]);
-		} else {
-			eval += piecePlaceEval_->Eval(currentArray_, addresses[oi], pieceTypes[oi]);
-		}
-	}
-
-	/* --------------------- 駒の可動性で評価をする --------------------- */
 	for (const auto& entity : player_->GetPices()) {
-		int mobilityEval = entity->PieceMobility(currentArray_);
-		eval -= mobilityEval;
-
-		// 評価値からキングに攻撃できるアドレスを取得
-		if (mobilityEval >= 100000) {
-			kingAttackAddress_ = entity->GetAddress();
+		if (entity->GetIsAlive()) {
+			eval -= piecePlaceEval_->WhiteEval(currentArray_, entity->GetAddress(), entity->GetPieceType());
 		}
 	}
 
 	for (const auto& entity : enemy_->GetPices()) {
-		eval += entity->PieceMobility(currentArray_);
+		if (entity->GetIsAlive()) {
+			eval += piecePlaceEval_->Eval(currentArray_, entity->GetAddress(), entity->GetPieceType());
+		}
 	}
 
-	/* --------------------- キングの安全性で評価する --------------------- */
-	for (size_t oi = 0; oi < addresses.size(); oi++) {
-		if (playerTypes[oi] == kCPU) {
-			if (pieceTypes[oi] == KingType) {
-				kingSafeEval += kingSafeEval_->Eval(currentArray_, addresses[oi]);
-				cpuKingAddress = addresses[oi];
+	///* --------------------- 駒の可動性で評価をする --------------------- */
+	for (const auto& entity : player_->GetPices()) {
+		if (entity->GetIsAlive()) {
+			int mobilityEval = entity->PieceMobility(currentArray_);
+			eval -= mobilityEval;
+
+			// 評価値からキングに攻撃できるアドレスを取得
+			if (mobilityEval >= 10000) {
+				kingAttackAddress_ = entity->GetAddress();
 			}
 		}
 	}
 
-	/* --------------------- キングを守れるかで評価 --------------------- */
-	// キングが攻撃されそうでキングの近くに行ける駒だったら評価値を上げる
-	if (kingSafeEval < 0) {
-		eval += kingSafeEval_->ProtectEval(addresses, playerTypes, cpuKingAddress);
+	for (const auto& entity : enemy_->GetPices()) {
+		if (entity->GetIsAlive()) {
+			eval += entity->PieceMobility(currentArray_);
+		}
 	}
 
-	eval += kingSafeEval;
+	/* --------------------- キングの安全性で評価する --------------------- */
+	eval += kingSafeEval_->Eval(currentArray_);
+
+	for (const auto& entity : player_->GetPices()) {
+		if (entity->GetIsCheck() == isCPU) {
+			eval -= 10000;
+		}
+	}
 
 	return  eval;
 }

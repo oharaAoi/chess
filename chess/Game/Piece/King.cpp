@@ -209,6 +209,8 @@ int King::PieceMobility(const std::vector<std::vector<int>>& board) {
 	int movedX[] = { 0, 1, 1, 1, 0, -1, -1, -1 };
 	int movedY[] = { 1, 1, 0, -1, -1, -1, 0, 1 };
 
+	isCheck_ = cannt;
+
 	for (int oi = 0; oi < 8; oi++) {
 		Vec2 checkAddress = address_;
 		checkAddress.x += movedX[oi];
@@ -231,10 +233,6 @@ int King::PieceMobility(const std::vector<std::vector<int>>& board) {
 			} else if (board[checkAddress.y][checkAddress.x] / 10 == static_cast<int>(checkType_ + 1)) {
 				moveCount++;
 				gettenCount += PieceGetting(static_cast<PieceType>(board[checkAddress.y][checkAddress.x] % 10));
-
-				if (Board::GetKingAttackAddress().x == checkAddress.x && Board::GetKingAttackAddress().y == checkAddress.y) {
-					gettenCount += 200000;
-				}
 			}
 		}
 	}
@@ -248,23 +246,14 @@ int King::PieceMobility(const std::vector<std::vector<int>>& board) {
 
 int King::PieceGetting(const PieceType& type) {
 	switch (type) {
-	case PawnType:
-		return 100;
-
-	case KnightType:
-		return 400;
-
-	case BishopType:
-		return 400;
-
-	case RookType:
-		return 500;
-
-	case QueenType:
-		return 800;
-
+	
 	case KingType:
-		return 1000000;
+		if (checkType_ == kCPU) {
+			isCheck_ = isCPU;
+		} else {
+			isCheck_ = isPlayer;
+		}
+		return 10000;
 	}
 
 	return 0;

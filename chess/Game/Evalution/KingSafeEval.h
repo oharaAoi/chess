@@ -4,17 +4,18 @@
 #include "LoadFile.h"
 #include <memory>
 #include <vector>
+#include <stack>
 #include <unordered_map>
 
 class KingSafeEval {
 public:
 
-	KingSafeEval();
+	KingSafeEval(const int& maxRow, const int& maxCol);
 	~KingSafeEval();
 
 	void Init();
 
-	int Eval(std::vector<std::vector<int>> boardArray, const Vec2& address);
+	int Eval(std::vector<std::vector<int>> boardArray);
 
 	/// <summary>
 	/// キングの周りに来れる駒があるかを評価
@@ -23,7 +24,7 @@ public:
 	/// <param name="playerType">アドレスの操作タイプ</param>
 	/// <param name="kingAddress">キングのアドレス</param>
 	/// <returns></returns>
-	int ProtectEval(const std::vector<Vec2>& address, const std::vector<PlayerType>& playerType, const Vec2& kingAddress);
+	int ProtectEval(std::vector<std::vector<int>> boardArray);
 
 	/// <summary>
 	/// 攻撃する駒を取ることができるかの評価
@@ -41,5 +42,11 @@ private:
 	int movedX_[8] = { 0, 1, 1, 1, 0, -1, -1, -1 };
 	int movedY_[8] = { 1, 1, 0, -1, -1, -1, 0, 1 };
 
+	int maxRow_;
+	int maxCol_;
+
+	Vec2 kingAddress_;
+
+	std::vector<Vec2> kingAttackAddress_;
 };
 

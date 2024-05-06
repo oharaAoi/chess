@@ -284,6 +284,8 @@ int Rook::PieceMobility(const std::vector<std::vector<int>>& board) {
 	// 駒の配列と行列数
 	int maxLine = static_cast<int>(board.size()) - 1;
 
+	isCheck_ = cannt;
+
 	// 上方向を確認(味方か敵がいるアドレスまでの数を計算する)
 	for (int row = address_.y + 1; row < maxLine; row++) {
 		// 0だったら生成
@@ -297,9 +299,9 @@ int Rook::PieceMobility(const std::vector<std::vector<int>>& board) {
 			gettenCount += PieceGetting(static_cast<PieceType>(board[address.y][address.x] % 10));
 
 			// キングを守れるかどうか
-			if (Board::GetKingAttackAddress().x == address.x && Board::GetKingAttackAddress().y == address.y) {
-				gettenCount += 200000;
-			}
+			/*if (Board::GetKingAttackAddress().x == address.x && Board::GetKingAttackAddress().y == address.y) {
+				gettenCount += 20000;
+			}*/
 
 			break;
 		} else {
@@ -320,9 +322,9 @@ int Rook::PieceMobility(const std::vector<std::vector<int>>& board) {
 			gettenCount += PieceGetting(static_cast<PieceType>(board[address.y][address.x] % 10));
 
 			// キングを守れるかどうか
-			if (Board::GetKingAttackAddress().x == address.x && Board::GetKingAttackAddress().y == address.y) {
-				gettenCount += 200000;
-			}
+			/*if (Board::GetKingAttackAddress().x == address.x && Board::GetKingAttackAddress().y == address.y) {
+				gettenCount += 20000;
+			}*/
 
 			break;
 		} else {
@@ -343,9 +345,9 @@ int Rook::PieceMobility(const std::vector<std::vector<int>>& board) {
 			gettenCount += PieceGetting(static_cast<PieceType>(board[address.y][address.x] % 10));
 
 			// キングを守れるかどうか
-			if (Board::GetKingAttackAddress().x == address.x && Board::GetKingAttackAddress().y == address.y) {
-				gettenCount += 200000;
-			}
+			/*if (Board::GetKingAttackAddress().x == address.x && Board::GetKingAttackAddress().y == address.y) {
+				gettenCount += 20000;
+			}*/
 
 			break;
 		} else {
@@ -366,9 +368,9 @@ int Rook::PieceMobility(const std::vector<std::vector<int>>& board) {
 			gettenCount += PieceGetting(static_cast<PieceType>(board[address.y][address.x] % 10));
 
 			// キングを守れるかどうか
-			if (Board::GetKingAttackAddress().x == address.x && Board::GetKingAttackAddress().y == address.y) {
-				gettenCount += 200000;
-			}
+			/*if (Board::GetKingAttackAddress().x == address.x && Board::GetKingAttackAddress().y == address.y) {
+				gettenCount += 20000;
+			}*/
 
 			break;
 		} else {
@@ -384,23 +386,13 @@ int Rook::PieceMobility(const std::vector<std::vector<int>>& board) {
 
 int Rook::PieceGetting(const PieceType& type) {
 	switch (type) {
-	case PawnType:
-		return 100;
-
-	case KnightType:
-		return 400;
-
-	case BishopType:
-		return 400;
-
-	case RookType:
-		return 500;
-
-	case QueenType:
-		return 800;
-
 	case KingType:
-		return 1000000;
+		if (checkType_ == kCPU) {
+			isCheck_ = isCPU;
+		} else {
+			isCheck_ = isPlayer;
+		}
+		return 10000;
 	}
 
 	return 0;

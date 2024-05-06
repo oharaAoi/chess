@@ -221,6 +221,8 @@ int Queen::PieceMobility(const std::vector<std::vector<int>>& board) {
 	int movedX[] = { 0, 1, 1, 1, 0, -1, -1, -1 };
 	int movedY[] = { 1, 1, 0, -1, -1, -1, 0, 1 };
 
+	isCheck_ = cannt;
+
 	for (int oi = 0; oi < 8; oi++) {
 		for (int ai = 1; ai < 9; ai++) {
 			Vec2 checkAddress = address_;
@@ -247,9 +249,9 @@ int Queen::PieceMobility(const std::vector<std::vector<int>>& board) {
 					gettenCount += PieceGetting(static_cast<PieceType>(board[checkAddress.y][checkAddress.x] % 10));
 
 					// キングを守れるかどうか
-					if (Board::GetKingAttackAddress().x == checkAddress.x && Board::GetKingAttackAddress().y == checkAddress.y) {
-						gettenCount += 200000;
-					}
+					/*if (Board::GetKingAttackAddress().x == checkAddress.x && Board::GetKingAttackAddress().y == checkAddress.y) {
+						gettenCount += 20000;
+					}*/
 
 					break;
 				} else {
@@ -259,30 +261,21 @@ int Queen::PieceMobility(const std::vector<std::vector<int>>& board) {
 		}
 	}
 
-	result =  gettenCount;
+	result = gettenCount;
 
 	return result;
 }
 
 int Queen::PieceGetting(const PieceType& type) {
 	switch (type) {
-	case PawnType:
-		return 100;
-
-	case KnightType:
-		return 400;
-
-	case BishopType:
-		return 400;
-
-	case RookType:
-		return 500;
-
-	case QueenType:
-		return 800;
-
+	
 	case KingType:
-		return 1000000;
+		if (checkType_ == kCPU) {
+			isCheck_ = isCPU;
+		} else {
+			isCheck_ = isPlayer;
+		}
+		return 10000;
 	}
 
 	return 0;

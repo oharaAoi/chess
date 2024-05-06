@@ -20,7 +20,7 @@ int MinMaxAlgorithm::AlphaBeta(int depth, int alpha, int beta, bool maximizingPl
 	roopCount_++;
 	// 深さが0に達したら関数を終了する
 	if (depth == 0) {
-		return board_->Evaluation(); // ここに評価関数が入る予定;
+		return board_->Evaluation();
 	}
 
 	// アルファ値が確定している最善の手の評価値
@@ -32,13 +32,14 @@ int MinMaxAlgorithm::AlphaBeta(int depth, int alpha, int beta, bool maximizingPl
 		// 最大の評価値
 		// 現在の盤面から打てる手をすべて配列に格納する
 		std::vector<Moved> allCanMoved = board_->CreateCanMove(Board::GetCurrentArray(), kCPU);
+		int eval = 0;
 		// 打てる手が決まったらそれをすべてループ分に回す
 		// 範囲for文を使うhttps://cpprefjp.github.io/lang/cpp11/range_based_for.html
 		for (const Moved& moved : allCanMoved) {
 			// 打てる手をボードに適応させる
 			board_->CreateMovedArray(moved);
 			// 適応させた手で相手の手の評価をする
-			int eval = AlphaBeta(depth - 1, alpha, beta, false);
+			eval = AlphaBeta(depth - 1, alpha, beta, false);
 			// 動きを適応させたボードを元に戻す
 			board_->CreateUndoMovedArray(moved);
 			// 評価値とmax値を比較する
@@ -56,15 +57,16 @@ int MinMaxAlgorithm::AlphaBeta(int depth, int alpha, int beta, bool maximizingPl
 	} else {
 		// 現在の盤面から打てる手をすべて配列に格納する
 		std::vector<Moved> allCanMoved = board_->CreateCanMove(Board::GetCurrentArray(), kPlayer);
+		int eval = 0;
 		for (const Moved& moved : allCanMoved) {
 			// 打てる手をボードに適応させる
 			board_->CreateMovedArray(moved);
 			// 適応させた手で相手の手の評価をする
-			int eval = AlphaBeta(depth - 1, alpha, beta, true);
+			eval = AlphaBeta(depth - 1, alpha, beta, true);
 			// 動きを適応させたボードを元に戻す
 			board_->CreateUndoMovedArray(moved);
 			beta = min(beta, eval);
-			// α値を下回ったため先読みせず評価を返す
+			// β値を下回ったため先読みせず評価を返す
 			if (beta <= alpha) {
 				return beta;
 			}
@@ -98,12 +100,12 @@ Moved MinMaxAlgorithm::FindBestMove(int depth) {
 
 		// 打てる手をボードに適応させる
 		board_->CreateMovedArray(moved);
-
-		int eval = AlphaBeta(depth - 1, alpha_, beta_, false);
+		// 深度分の手先まで探索
+		int eval = AlphaBeta(depth - 1, bestEval, beta_, false);
+		// 元に戻す
 		board_->CreateUndoMovedArray(moved);
 
-		alpha_ = eval;
-
+		// 最適な手の評価
 		if (bestEval < eval) {
 			bestEval = eval;
 			result = moved;

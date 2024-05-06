@@ -73,7 +73,7 @@ void Scene_Game::Update(){
 		enemy_->BoardSetting();
 
 		// 敵が駒を指す
-		moved_ = minmax_->FindBestMove(2);
+		moved_ = minmax_->FindBestMove(3);
 		enemy_->AiPoint(moved_);
 
 		// 当たり判定をとる(当たっていたらplayerの駒が取れる)
@@ -102,6 +102,9 @@ void Scene_Game::Draw(){
 
 	ImGui::Begin("Scene");
 	ImGui::Text("Scene_Game");
+	if(ImGui::Button("Reset")) {
+		Init();
+	}
 	ImGui::End();
 
 	ImGui::Begin("Result");

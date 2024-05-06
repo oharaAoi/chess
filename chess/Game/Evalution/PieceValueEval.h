@@ -29,8 +29,12 @@ public:
 private:
 
 	std::unordered_map<std::string, int> pieceValues_ = {
-	{"PawnType", 142}, {"KnightType", 784}, {"BishopType", 828}, {"RookType", 1286},
-	{"QueenType", 2528}, {"KingType", 0}
+		{"PawnType", 1}, 
+		{"KnightType", 3}, 
+		{"BishopType", 3}, 
+		{"RookType", 5},
+		{"QueenType", 9},
+		{"KingType", 0}
 	};
 
 	int maxRow_;
