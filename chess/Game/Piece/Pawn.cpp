@@ -112,11 +112,11 @@ void Pawn::MovePlaceInit() {
 		if (nowArray[address_.y + (1 * coefficient_)][address_.x] == 0) {
 			Vec2 address = { address_.x , address_.y + (1 * coefficient_) };
 			movePlaces_.push_back(std::make_unique<PieceMovePlace>(address));
-		}
 
-		if (nowArray[address_.y + (2 * coefficient_)][address_.x] == 0) {
-			Vec2 address = { address_.x , address_.y + (2 * coefficient_) };
-			movePlaces_.push_back(std::make_unique<PieceMovePlace>(address));
+			if (nowArray[address_.y + (2 * coefficient_)][address_.x] == 0) {
+				address = { address_.x , address_.y + (2 * coefficient_) };
+				movePlaces_.push_back(std::make_unique<PieceMovePlace>(address));
+			}
 		}
 	}
 
@@ -190,11 +190,11 @@ std::vector<Moved> Pawn::GetCanMove(const std::vector<std::vector<int>>& board) 
 		if (nowArray[address_.y + (1 * coefficient_)][address_.x] == 0) {
 			Vec2 address = { address_.x , address_.y + (1 * coefficient_) };
 			result.push_back({ address , address_ });
-		}
 
-		if (nowArray[address_.y + (2 * coefficient_)][address_.x] == 0) {
-			Vec2 address = { address_.x , address_.y + (2 * coefficient_) };
-			result.push_back({ address , address_ });
+			if (nowArray[address_.y + (2 * coefficient_)][address_.x] == 0) {
+				address = { address_.x , address_.y + (2 * coefficient_) };
+				result.push_back({ address , address_ });
+			}
 		}
 	}
 
@@ -233,11 +233,11 @@ int Pawn::PieceMobility(const std::vector<std::vector<int>>& board) {
 		if (nowArray[address_.y + (1 * coefficient_)][address_.x] == 0) {
 			Vec2 address = { address_.x , address_.y + (1 * coefficient_) };
 			moveCount++;
-		}
 
-		if (nowArray[address_.y + (2 * coefficient_)][address_.x] == 0) {
-			Vec2 address = { address_.x , address_.y + (2 * coefficient_) };
-			moveCount++;
+			if (nowArray[address_.y + (2 * coefficient_)][address_.x] == 0) {
+				address = { address_.x , address_.y + (2 * coefficient_) };
+				moveCount++;
+			}
 		}
 	}
 
